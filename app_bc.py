@@ -66,7 +66,7 @@ df_bc = load_bc_empirical_data()
 if menu == "Abstract & Clinical Background":
     st.markdown('<div class="section-header">1. Introduction & Clinical Bottleneck</div>', unsafe_allow_html=True)
     st.markdown("""
-    In precision oncology, leveraging Large Language Models (LLMs) to support Multidisciplinary Tumor Boards (MDT) is an expanding frontier. However, contemporary evaluation frameworks rely heavily on superficial **Question-Answering (QA) Accuracy** or direct consensus alignment with medical guidelines. This simplistic benchmarking introduces a critical regulatory vulnerability: **it fails to distinguish whether an LLM has genuinely mapped the underlying statistical covariance of patient features, or if it is merely performing post-hoc retrieval of learned training nomenclature.**
+    In precision oncology, leveraging Large Language Models (LLMs) to support Multidisciplinary Tumor Boards (MDT) is an expanding frontier. However, contemporary evaluation frameworks rely heavily on superficial **Question-Answering (QA) Accuracy** or direct consensus alignment with medical guidelines. This simplistic benchmarking introduces a critical regulatory vulnerability: **it fails to distinguish whether an LLM has genuinely mapped the underlying statistical covariance of patient features, or if it is merely performing verbatim post-hoc retrieval of learned training nomenclature.**
     
     In clinical practice, the most hazardous failures occur within **atypical patient subcohorts** who fall outside standard clinical trials (e.g., elderly breast cancer patients presenting with severe preexisting interstitial lung disease or compromised cardiac function). If an AI model suffers from dogmatic rigidity—relying purely on guideline nomenclature while ignoring empirical safety signals within the current dataset—it poses a severe risk to patient safety.
     """)
@@ -117,7 +117,7 @@ elif menu == "Methodology & Experimental Design":
     """)
 
 # ==========================================
-# SECTION 3: EXPECTED OUTCOMES & QUANTITATIVE ANALYSIS
+# SECTION 3: EXPECTED OUTCOMES
 # ==========================================
 elif menu == "Expected Empirical Outcomes":
     st.markdown('<div class="section-header">1. Primary Quantitative Curves & Phase Transitions</div>', unsafe_allow_html=True)
@@ -148,7 +148,7 @@ elif menu == "Expected Empirical Outcomes":
     fig.add_shape(type="line", x0=0, y0=50, x1=90, y1=50, line=dict(color="gray", dash="dash"))
     st.plotly_chart(fig, use_container_width=True)
     
-    # ─── DEEP FORMAL ACADEMIC DECONSTRUCTION OF FIG 1 ───
+    # Deconstruction of Curve Discontinuities
     st.markdown('<div class="section-header">2. Deconstruction of Phase Transition Mechanics (Why the Curves Bifurcate)</div>', unsafe_allow_html=True)
     
     ana1, ana2 = st.columns(2)
@@ -202,7 +202,7 @@ else:
     target_df = df_bc[(df_bc["Condition"] == selected_cond) & (df_bc["Distortion"] == selected_dist)]
     
     if not target_df.empty:
-        st.subheader("Multi-Agent Alignment Profiles at Selected Coordinate")
+        st.subheader("Model Alignment Profiles at Selected Coordinate")
         for idx, row in target_df.iterrows():
             col_m1, col_m2 = st.columns(2)
             with col_m1:

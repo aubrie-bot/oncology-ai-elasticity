@@ -126,7 +126,6 @@ elif menu == "Expected Empirical Outcomes":
 
     # High-density Plotly Chart Generation
     fig = go.Figure()
-    # Theoretical Baseline
     fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[0,30,50,70,90], mode='lines', name="Ideal Bayesian Observer (Theoretical Normative)", line=dict(color="black", dash="dot")))
     
     # Condition A (Minimal) Profiles
@@ -139,7 +138,7 @@ elif menu == "Expected Empirical Outcomes":
     fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[4,34,54,74,94], mode='lines+markers', name="GPT-4o - Condition C (Pure Structural)", line=dict(color="#636EFA", width=2, dash="dash")))
     
     fig.update_layout(
-        xaxis_title="Guideline Distortion Gradient (%: 0% Standard ──► 90% Completely Inverted)",
+        xaxis_title="Guideline Distortion Gradient (%: 0% Standard --► 90% Completely Inverted)",
         yaxis_title="Posterior Alignment with Empirical Evidence (%)",
         template="plotly_white",
         height=520,
@@ -151,24 +150,57 @@ elif menu == "Expected Empirical Outcomes":
     # Deconstruction of Curve Discontinuities
     st.markdown('<div class="section-header">2. Deconstruction of Phase Transition Mechanics (Why the Curves Bifurcate)</div>', unsafe_allow_html=True)
     
+    # 使用 Python 原生三引號多行純文字，徹底消滅 Markdown 符號誤判引起的亂碼與卡死
+    desc_gpt_a = (
+        "Phenomenon: Under Condition A, GPT-4o flatlines at 5% alignment up to 50% distortion, "
+        "followed by a steep, abrupt mathematical leap at 70%.\n\n"
+        "Mechanistic Explanation: Retaining explicit breast cancer clinical labels (HER2, HR, gBRCA) "
+        "activates the pre-trained medical ontology network at maximum strength. Under moderate evidence "
+        "conflict (<50%), the model over-allocates weight to its Semantic Prior, classifying empirical anomalies "
+        "as stochastic data noise. A decision-making phase transition is only triggered when evidence conflict "
+        "crosses a critical 70% pressure boundary, resulting in a sudden, catastrophic posterior reorganization "
+        "rather than a smooth Bayesian update."
+    )
+    
+    desc_gpt_bc = (
+        "Phenomenon: Moving from Condition A to B and C, GPT-4o's inflection points advance smoothly "
+        "to the 50% equilibrium mark, linearizing the transition.\n\n"
+        "Mechanistic Explanation: Masking categorical medical tokens (Condition B) or fully symbolicating "
+        "variables (Condition C) erases the model's internal medical world model (where the prior probability "
+        "approximates a uniform distribution). Deprived of linguistic safety ropes, the internal prior rigidity (PRI) "
+        "decreases significantly, defaulting the agent to a high-dimensional pattern recognizer. The output becomes "
+        "dictated solely by the empirical covariance matrix, demonstrating that AI dogmatism is highly contingent "
+        "upon superficial linguistic nomenclature."
+    )
+    
+    desc_gemini = (
+        "Phenomenon: Even with intact semantic markers (Condition A), the model completely abandons clinical "
+        "guidelines prematurely at a low 30% distortion gradient.\n\n"
+        "Mechanistic Explanation: This exposes a profound architectural divergence in internal inductive bias. "
+        "Gemini 1.5 Pro's attention layers are highly sensitized to in-context statistical distributions over global "
+        "parametric memories. While highly adaptive, this poses severe clinical risks: the model lacks rational "
+        "skepticism, deserting human breast cancer knowledge in favor of localized, noisy, or systematically biased "
+        "datasets at the first sign of statistical asymmetry."
+    )
+    
+    desc_claude = (
+        "Phenomenon: Demonstrates a stable sigmoidal step right at the 50% information entropy mark under Condition A.\n\n"
+        "Mechanistic Explanation: Claude 3.5 Sonnet represents a balanced cognitive synthesis. It maintains defensive "
+        "parametric priors when evidence is ambiguous (<30%) to safeguard critical patient boundaries (e.g., cardiotoxicity "
+        "counter-indications), but successfully executes a calibrated belief update once the empirical likelihood establishes "
+        "true statistical dominance at the 50% threshold."
+    )
+    
     ana1, ana2 = st.columns(2)
     with ana1:
-        st.markdown('<div class="analysis-card">🔴 <b>GPT-4o Profile: Extreme Prior Rigidity & Step-Function Phase Transition</b><br><br>'
-                    '<b>Phenomenon:</b> Under Condition A, GPT-4o flatlines at 5% alignment up to 50% distortion, followed by a steep, abrupt mathematical leap at 70%.<br>'
-                    '<b>Mechanistic Explanation:</b> Retaining explicit breast cancer clinical labels (HER2, HR, gBRCA) activates the pre-trained medical ontology network at maximum strength. Under moderate evidence conflict (<50%), the model over-allocates weight to its <i>Semantic Prior</i>, classifying empirical anomalies as stochastic data noise. A decision-making phase transition is only triggered when evidence conflict crosses a critical 70% pressure boundary, resulting in a sudden, catastrophic posterior reorganization rather than a smooth Bayesian update.</div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="analysis-card">🟠 <b>The Softening Effect (Condition B) & Structural Erasure (Condition C)</b><br><br>'
-                    '<b>Phenomenon:</b> Moving from Condition A to B and C, GPT-4o\'s inflection points advance smoothly to the 50% equilibrium mark, linearizing the transition.<br>'
-                    '<b>Mechanistic Explanation:</b> Masking categorical medical tokens (Condition B) or fully symbolicating variables (Condition C) erases the model\'s internal medical world model ($P(H) \\approx \\text{Uniform}$). Deprived of linguistic safety ropes, the internal prior rigidity (PRI) decreases significantly, defaulting the agent to a high-dimensional pattern recognizer. The output becomes dictated solely by the empirical covariance matrix, demonstrating that AI dogmatism is highly contingent upon superficial linguistic nomenclature.</div>', unsafe_allow_html=True)
+        st.subheader("🔴 OpenAI GPT-4o Profiles")
+        st.info(desc_gpt_a)
+        st.info(desc_gpt_bc)
 
     with ana2:
-        st.markdown('<div class="analysis-card">🟢 <b>Gemini 1.5 Pro Profile: Empirical Dominance & Vulnerability to Spurious Noise</b><br><br>'
-                    '<b>Phenomenon:</b> Even with intact semantic markers (Condition A), the model completely abandons clinical guidelines prematurely at a low 30% distortion gradient.<br>'
-                    '<b>Mechanistic Explanation:</b> This exposes a profound architectural divergence in internal inductive bias. Gemini 1.5 Pro\'s attention layers are highly sensitized to in-context statistical distributions over global parametric memories. While highly adaptive, this poses severe clinical risks: the model lacks rational skepticism, deserting human breast cancer knowledge in favor of localized, noisy, or systematically biased datasets at the first sign of statistical asymmetry.</div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="analysis-card">🟣 <b>Claude 3.5 Sonnet Profile: Balanced Synthesis & Calibrated Latent Mapping</b><br><br>'
-                    '<b>Phenomenon:</b> Demonstrates a stable sigmoidal step right at the 50% information entropy mark under Condition A.<br>'
-                    '<b>Mechanistic Explanation:</b> Claude 3.5 Sonnet represents a balanced cognitive synthesis. It maintains defensive parametric priors when evidence is ambiguous (<30%) to safeguard critical patient boundaries (e.g., cardiotoxicity counter-indications), but successfully executes a calibrated belief update once the empirical likelihood establishes true statistical dominance at the 50% threshold.</div>', unsafe_allow_html=True)
+        st.subheader("🟢 Google Gemini & 🟣 Anthropic Claude")
+        st.warning(desc_gemini)
+        st.success(desc_claude)
 
     st.markdown('<div class="section-header">3. Scientific Contribution & Clinical Utility</div>', unsafe_allow_html=True)
     col_a, col_b, col_c = st.columns(3)

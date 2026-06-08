@@ -18,6 +18,8 @@ menu = st.sidebar.radio("📋 平台導覽", ["研究提案書 (Proposal)", "互
 # ==========================================
 # 模擬或讀取盲測結果數據 (Mock/Real Data Loader)
 # ==========================================
+if not os.path.exists("matrices_data"):
+    os.makedirs("matrices_data")
 def load_results():
     distortions = [0, 30, 50, 70, 90]
     conditions = ["Condition A (Minimal)", "Condition B (Partial)", "Condition C (Full)"]

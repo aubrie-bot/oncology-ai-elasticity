@@ -17,6 +17,7 @@ st.markdown("""
     .metric-card { background-color: #F9FAFB; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #3B82F6; margin-bottom: 1rem; }
     .contribution-card { background-color: #F0FDF4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22C55E; margin-bottom: 1rem; }
     .analysis-card { background-color: #EFF6FF; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #BFDBFE; }
+    .math-block { background-color: #F8FAFC; padding: 1.25rem; border-radius: 0.5rem; border: 1px solid #E2E8F0; font-family: monospace; margin-bottom: 1rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -26,7 +27,7 @@ st.markdown('<div class="report-subtitle">When Clinical Semantics Disappear: Qua
 # Sidebar Navigation Control
 menu = st.sidebar.radio(
     "📋 Protocol Navigation", 
-    ["Abstract & Clinical Background", "Methodology & Multi-Agent Design", "Expected Empirical Outcomes", "Interactive 3x5 Multi-Model Matrix"]
+    ["Abstract & Clinical Background", "Methodology & Formal Mathematics", "Expected Empirical Outcomes", "Interactive 3x5 Multi-Model Matrix"]
 )
 
 # ==========================================
@@ -85,35 +86,51 @@ if menu == "Abstract & Clinical Background":
     """)
 
 # ==========================================
-# SECTION 2: METHODOLOGY & MULTI-AGENT DESIGN
+# SECTION 2: METHODOLOGY & FORMAL MATHEMATICS (完全重寫：公式化與學術推導)
 # ==========================================
-elif menu == "Methodology & Experimental Design":
-    st.markdown('<div class="section-header">1. Two-Dimensional Informational Stress Grid ($3 \times 5$)</div>', unsafe_allow_html=True)
-    st.markdown("This framework implements an experimental paradigm cross-referencing **three conditions of semantic abstraction** with **five discrete levels of guideline distortion**, utilizing a locked synthetic cohort of $N=2000$ highly heterogeneous breast cancer patient profiles.")
-    
-    st.subheader("Experimental Abstraction Tiers")
-    abs_col1, abs_col2, abs_col3 = st.columns(3)
-    with abs_col1:
-        st.error("**Condition A: Minimal Abstraction**")
-        st.caption("Only primary therapeutic regimens are blinded (e.g., Trastuzumab Deruxtecan mapped to 'Regimen X'). Standard biomarker labels (HER2, HR Status, gBRCA) remain fully intact to evaluate baseline ontology mapping.")
-    with abs_col2:
-        st.warning("**Condition B: Partial Semantic Abstraction**")
-        st.caption("Key molecular biomarkers are completely anonymized (e.g., gBRCA mapped to 'Biomarker A'; HER2 mapped to 'Biomarker B'), while keeping their underlying joint numerical distributions intact to capture semantic anchor dependence.")
-    with abs_col3:
-        st.success("**Condition C: Full Structural Abstraction**")
-        st.caption("All clinical dimensions are mapped to pure symbols (e.g., LVEF mapped to 'Feature 1'). Eliminates all semantic context to isolate the model's pure statistical structure processing capability.")
-
-    st.subheader("2. Multi-Agent Evaluation Axis & Non-linear Data Generating Process (DGP)")
+elif menu == "Methodology & Formal Mathematics":
+    st.markdown('<div class="section-header">1. Formal Mathematical Modeling of Belief Updating</div>', unsafe_allow_html=True)
     st.markdown("""
-    To isolate whether observed behaviors are universal properties of autoregressive transformers or artifacts of specific alignment strategies, the evaluation loop tests across three major architectural families:
-    * **OpenAI GPT-4o**: Aligned via dense proprietary reinforcement learning, optimized to prioritize structural instructions and parametric memory guidelines.
-    * **Google Gemini 1.5 Pro**: Context-optimized architecture designed for highly responsive processing of in-context data distributions.
-    * **Anthropic Claude 3.5 Sonnet**: Characterized by stable, calibrated reasoning traces under abstract symbolic conditions.
+    To formalize artificial clinical cognition, we model the LLM as a computational agent navigating an information-theoretic decision space. 
+    Let $H_G$ denote the hypothesis that the standard clinical guideline holds true, and $H_E$ denote the alternative hypothesis driven by the empirically distorted dataset.
     
-    **Statistical Controls Injection:**
-    * **Non-linear Step Thresholds**: Functional biomarkers (e.g., Left Ventricular Ejection Fraction, LVEF) trigger exponential cardiotoxicity assignment rules once dropping below the critical threshold of 45%.
-    * **Stochastic Allocation Noise**: A 15% random assignment shuffle is injected to simulate physician heterogeneity and unobserved clinical confounders inherent in real-world data (RWD).
-    * **Three-Arm Control Benchmark**: Execution parameters are locked at `Temperature = 0` with fixed seeds to ensure complete determinism across the **Theoretical Bayesian Limit**, **Human Expert Baseline**, and the **LLM Evaluation Cohorts**.
+    The model's internal posterior belief ratio is governed by a modified Bayesian inference framework with an architectural rigidity coefficient $\gamma$:
+    """)
+    
+    st.latex(r"\log \frac{P(H_E \mid D)}{P(H_G \mid D)} = \gamma \cdot \log \frac{P(H_E)}{P(H_G)} + \sum_{i=1}^{N} \log \frac{P(D_i \mid H_E)}{P(D_i \mid H_G)}")
+    
+    st.markdown("""
+    Where:
+    * $\gamma \ge 1$ represents the **Prior Rigidity Index (PRI)**, parameterizing the model's structural resistance to out-of-distribution (OOD) empirical data.
+    * $D_i$ represents the individual patient profile drawn from the synthetic cohort ($N=2000$).
+    """)
+    
+    st.markdown('<div class="section-header">2. Mathematical Formulation of the 3 Abstraction Conditions</div>', unsafe_allow_html=True)
+    
+    math_col1, math_col2, math_col3 = st.columns(3)
+    with math_col1:
+        st.markdown("### Condition A: Parametric Anchor")
+        st.latex(r"\gamma_{A} \gg 1")
+        st.caption("Standard medical nomenclature (e.g., HER2+, BRCA) is intact. The pre-trained linguistic weights act as an ironclad anchor, maximizing prior rigidity and suppressing statistical observations.")
+    with math_col2:
+        st.markdown("### Condition B: Partial Ablation")
+        st.latex(r"\gamma_{B} \to 1")
+        st.caption("Linguistic tokens are anonymized (e.g., Biomarker B). The semantic anchor degrades, forcing the model to transition into a semi-balanced probabilistic estimator.")
+    with math_col3:
+        st.markdown("### Condition C: Full Eradication")
+        st.latex(r"P(H) \sim \mathcal{U}(0, 1) \implies \gamma_{C} \to 0")
+        st.caption("Complete token symbolization (Features 1-5). The prior collapses to a uniform distribution, compelling the LLM to function exclusively as a pure statistical covariance mapper.")
+
+    st.markdown('<div class="section-header">3. Information-Theoretic Distance & Human Expert Control Limit</div>', unsafe_allow_html=True)
+    st.markdown("""
+    To quantify the behavioral divergence between different model architectures and human expert benchmarks, we compute the **Kullback-Leibler (KL) Divergence** between the model's posterior decision vector $Q(X)$ and the ideal Bayesian normative distribution $P(X)$:
+    """)
+    
+    st.latex(r"D_{\text{KL}}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log \frac{P(x)}{Q(x)}")
+    
+    st.markdown("""
+    * **Human Expert Baseline Limit**: Modeled as an adaptive agent with bounded rationality, exhibiting a smooth calibration window ($D_{\text{KL}} \le 0.15$ under mild noise) but protecting absolute safety constraints (e.g., exponential exclusion rules when Left Ventricular Ejection Fraction $\le 45\%$).
+    * **Stochastic Allocation Noise**: To maintain clinical realism, a 15% random assignment shuffle is injected via a localized Gaussian noise vector $\epsilon \sim \mathcal{N}(0, \sigma^2)$ into the data generating process (DGP), preventing artificial linear separability.
     """)
 
 # ==========================================
@@ -150,7 +167,6 @@ elif menu == "Expected Empirical Outcomes":
     # Deconstruction of Curve Discontinuities
     st.markdown('<div class="section-header">2. Deconstruction of Phase Transition Mechanics (Why the Curves Bifurcate)</div>', unsafe_allow_html=True)
     
-    # 使用 Python 原生三引號多行純文字，徹底消滅 Markdown 符號誤判引起的亂碼與卡死
     desc_gpt_a = (
         "Phenomenon: Under Condition A, GPT-4o flatlines at 5% alignment up to 50% distortion, "
         "followed by a steep, abrupt mathematical leap at 70%.\n\n"
@@ -212,7 +228,7 @@ elif menu == "Expected Empirical Outcomes":
         st.markdown('<div class="contribution-card">📈 <b>Optimal Deployment Architecture</b><br><br>Provides an objective framework for safe clinical assignment: High-Rigidity models (e.g., GPT) are optimized to act as conservative gatekeepers for standard frontline guidelines, whereas Empirical-Dominance models (e.g., Gemini) are uniquely suited for early pharmacovigilance tracking.</div>', unsafe_allow_html=True)
 
 # ==========================================
-# SECTION 4: INTERACTIVE 3X5 MULTI-MODEL MATRIX
+# SECTION 4: INTERACTIVE 3X5 MULTI-MODEL MATRIX (保留其動態單點查核功能)
 # ==========================================
 else:
     st.header("🎛️ High-Stress Informational Matrix Audit")

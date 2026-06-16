@@ -39,7 +39,7 @@ No real commercial API execution calls have been instantiated at this validation
 
 # Sidebar Navigation Control
 menu = st.sidebar.radio(
-    "📋 Protocol Navigation", 
+    "Navigation", 
     [
         "Research Question", 
         "Experimental Design", 
@@ -64,7 +64,7 @@ def compute_kl_divergence(p_prob, q_prob):
     return np.sum(p * np.log(p / q))
 
 # ==========================================
-# PAGE 1: RESEARCH QUESTION
+# PAGE 1: RESEARCH QUESTION (徹底消滅任何潛在亂碼)
 # ==========================================
 if menu == "Research Question":
     st.markdown('<div class="section-header">Clinical Motivation & Regulatory Bottleneck</div>', unsafe_allow_html=True)
@@ -78,14 +78,13 @@ if menu == "Research Question":
     
     st.markdown('<div class="section-header">Core Informational Stress Hypotheses</div>', unsafe_allow_html=True)
     
-    # Using pristine clean raw string to 100% eliminate encoding artifacts and bad characters
-    hypothesis_text = r"""
-    <b>Central Research Objective:</b> When explicit clinical domain labels are systematically ablated 
-    and the immediate dataset distribution directly contradicts historical textbook guidelines, 
-    does a transformer-based agent rely on its <b>Pre-trained Semantic Prior Knowledge</b> 
-    or its capacity to reconstruct <b>Latent Statistical Data Structures</b>?
-    """
-    st.info(hypothesis_text)
+    # 移除所有 HTML 標記，改用純淨的 Markdown 格式，徹底杜絕網頁渲染編碼衝突
+    st.info(
+        "**Central Research Objective:** When explicit clinical domain labels are systematically ablated "
+        "and the immediate dataset distribution directly contradicts historical textbook guidelines, "
+        "does a transformer-based agent rely on its **Pre-trained Semantic Prior Knowledge** "
+        "or its capacity to reconstruct **Latent Statistical Data Structures**?"
+    )
 
 # ==========================================
 # PAGE 2: EXPERIMENTAL DESIGN
@@ -160,14 +159,14 @@ elif menu == "Elasticity Simulation":
         st.markdown("""
         <div class="analysis-card" style="border-left-color: #EF4444;">
         <b>Expected Phenotype — High-Rigidity Profile:</b><br>
-        If an agent exhibits elevated parametric anchoring ($\beta_0 \\ll 0$), it is hypothesized to remain non-responsive to empirical data asymmetries under low-to-moderate stress conditions ($X < 50\%$). A phase transition into evidence alignment is expected to materialize only under extreme distortion pressure ($X \\ge 70\%$).
+        If an agent exhibits elevated parametric anchoring (beta_0 << 0), it is hypothesized to remain non-responsive to empirical data asymmetries under low-to-moderate stress conditions (X < 50%). A phase transition into evidence alignment is expected to materialize only under extreme distortion pressure (X >= 70%).
         </div>
         """, unsafe_allow_html=True)
     with col_hyp2:
         st.markdown("""
         <div class="analysis-card" style="border-left-color: #10B981;">
         <b>Expected Phenotype — Adaptive Profile:</b><br>
-        If an agent's internal architecture prioritizes in-context distributions over weights memorization ($\beta_0 \\to 0$), the model may exhibit an accelerated, linear shift along the gradient, migrating toward empirical evidence alignment significantly earlier in the timeline.
+        If an agent's internal architecture prioritizes in-context distributions over weights memorization (beta_0 -> 0), the model may exhibit an accelerated, linear shift along the gradient, migrating toward empirical evidence alignment significantly earlier in the timeline.
         </div>
         """, unsafe_allow_html=True)
 
@@ -175,7 +174,7 @@ elif menu == "Elasticity Simulation":
 # PAGE 4: POSTERIOR FLIP THRESHOLD (PFT)
 # ==========================================
 elif menu == "Posterior Flip Threshold (PFT)":
-    st.markdown('<div class="section-header">1. Operationalization of the PFT Primary Metric ($X^*$)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">1. Operationalization of the PFT Primary Metric (X*)</div>', unsafe_allow_html=True)
     st.write("""
     A primary contribution of this methodology is the formulation of the **Posterior Flip Threshold (PFT)**. 
     PFT isolates the exact mathematical coordinate along the data distortion axis where the model's internal belief state crosses equilibrium ($P(Y=1) = 0.5$). 
@@ -186,9 +185,9 @@ elif menu == "Posterior Flip Threshold (PFT)":
 
     col_pft1, col_pft2 = st.columns(2)
     with col_pft1:
-        input_b0 = st.slider("Beta_0 (\u03b2\u2080 : Parametric Adherence Bias)", -10.0, -0.5, -5.0, step=0.1)
+        input_b0 = st.slider("Beta_0 (Intercept Parameter : Parametric Bias)", -10.0, -0.5, -5.0, step=0.1)
     with col_pft2:
-        input_b1 = st.slider("Beta_1 (\u03b2\u2081 : Data Sensitivity Velocity)", 1.0, 15.0, 8.0, step=0.1)
+        input_b1 = st.slider("Beta_1 (Slope Parameter : Sensitivity Velocity)", 1.0, 15.0, 8.0, step=0.1)
 
     calculated_pft = (-input_b0 / input_b1) * 100
 

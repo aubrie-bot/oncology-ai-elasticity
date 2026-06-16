@@ -64,7 +64,7 @@ def compute_kl_divergence(p_prob, q_prob):
     return np.sum(p * np.log(p / q))
 
 # ==========================================
-# PAGE 1: RESEARCH QUESTION (徹底消滅任何潛在亂碼)
+# PAGE 1: RESEARCH QUESTION
 # ==========================================
 if menu == "Research Question":
     st.markdown('<div class="section-header">Clinical Motivation & Regulatory Bottleneck</div>', unsafe_allow_html=True)
@@ -77,8 +77,6 @@ if menu == "Research Question":
     """)
     
     st.markdown('<div class="section-header">Core Informational Stress Hypotheses</div>', unsafe_allow_html=True)
-    
-    # 移除所有 HTML 標記，改用純淨的 Markdown 格式，徹底杜絕網頁渲染編碼衝突
     st.info(
         "**Central Research Objective:** When explicit clinical domain labels are systematically ablated "
         "and the immediate dataset distribution directly contradicts historical textbook guidelines, "
@@ -171,23 +169,36 @@ elif menu == "Elasticity Simulation":
         """, unsafe_allow_html=True)
 
 # ==========================================
-# PAGE 4: POSTERIOR FLIP THRESHOLD (PFT)
+# PAGE 4: POSTERIOR FLIP THRESHOLD (加強解釋)
 # ==========================================
 elif menu == "Posterior Flip Threshold (PFT)":
     st.markdown('<div class="section-header">1. Operationalization of the PFT Primary Metric (X*)</div>', unsafe_allow_html=True)
     st.write("""
-    A primary contribution of this methodology is the formulation of the **Posterior Flip Threshold (PFT)**. 
-    PFT isolates the exact mathematical coordinate along the data distortion axis where the model's internal belief state crosses equilibrium ($P(Y=1) = 0.5$). 
+    The **Posterior Flip Threshold (PFT)** isolates the exact coordinate along the data distortion axis where the model's internal belief state crosses equilibrium ($P(Y=1) = 0.5$). 
     Solving for the logit activation equal to zero yields the exact critical boundary metric:
     """)
     
     st.latex(r"X^* = -\frac{\beta_0}{\beta_1} \times 100")
 
+    # 欄位調整區塊
     col_pft1, col_pft2 = st.columns(2)
     with col_pft1:
         input_b0 = st.slider("Beta_0 (Intercept Parameter : Parametric Bias)", -10.0, -0.5, -5.0, step=0.1)
+        st.markdown("""
+        <div style="font-size:0.85rem; color:#4B5563; margin-top:-10px; margin-bottom:15px; padding-left:5px;">
+        💡 <b>What this controls:</b> Modulates the model's baseline anchor or <i>dogmatic memory strength</i>. 
+        Moving this closer to -10.0 simulates a highly conservative agent fiercely holding onto pre-trained guidelines (NCCN).
+        </div>
+        """, unsafe_allow_html=True)
+        
     with col_pft2:
         input_b1 = st.slider("Beta_1 (Slope Parameter : Sensitivity Velocity)", 1.0, 15.0, 8.0, step=0.1)
+        st.markdown("""
+        <div style="font-size:0.85rem; color:#4B5563; margin-top:-10px; margin-bottom:15px; padding-left:5px;">
+        💡 <b>What this controls:</b> Modulates the agent's <i>statistical responsiveness velocity</i>. 
+        Higher values force a steeper, more radical phase transition curve, showing how sharply an LLM breaks its dogma once evidence accumulates.
+        </div>
+        """, unsafe_allow_html=True)
 
     calculated_pft = (-input_b0 / input_b1) * 100
 
@@ -221,7 +232,7 @@ elif menu == "Posterior Flip Threshold (PFT)":
     st.table(tracking_table)
 
 # ==========================================
-# PAGE 5: INTERACTIVE EXPLORER & LIVE KL MATRIX
+# PAGE 5: INTERACTIVE EXPLORER (加強解釋)
 # ==========================================
 else:
     st.markdown('<div class="section-header">Dynamic Matrix Point Auditor & Information Entropy Evaluator</div>', unsafe_allow_html=True)
@@ -229,10 +240,24 @@ else:
 
     sel_col, dist_col = st.columns(2)
     with sel_col:
-        ui_cond = st.selectbox("Target Condition Tier", ["Condition A", "Condition B", "Condition C"])
+        ui_cond = st.selectbox("Target Condition Tier (Dropdown)", ["Condition A", "Condition B", "Condition C"])
+        st.markdown("""
+        <div style="font-size:0.85rem; color:#4B5563; margin-top:-10px; margin-bottom:15px; padding-left:5px;">
+        🔍 <b>Dropdown Meaning:</b> Changes the degree of <b>textual masking</b>. 
+        Condition A keeps full oncology keywords; Condition C isolates the pure mathematical matrix with zero language context.
+        </div>
+        """, unsafe_allow_html=True)
+        
     with dist_col:
-        ui_dist = st.select_slider("Target Distortion Pressure Input", options=[0, 30, 50, 70, 90])
+        ui_dist = st.select_slider("Target Distortion Pressure Input (Slider)", options=[0, 30, 50, 70, 90])
+        st.markdown("""
+        <div style="font-size:0.85rem; color:#4B5563; margin-top:-10px; margin-bottom:15px; padding-left:5px;">
+        🔍 <b>Slider Meaning:</b> Controls how severely the patient cohort data <b>violates conventional rules</b>. 
+        0% perfectly matches standard guidelines; 90% near-completely flips the rules upside down.
+        </div>
+        """, unsafe_allow_html=True)
 
+    # 內部邏輯參數組配
     if ui_cond == "Condition A":
         sim_b0, sim_b1 = -5.5, 9.5
     elif ui_cond == "Condition B":
@@ -262,12 +287,12 @@ else:
     st.markdown(f"""
     <div class="math-card">
     <b>Active Verification Telemetry Log:</b><br><br>
-    • Context State Tracked: <code>{ui_cond}</code><br>
-    • Data Inversion Strain (X): <code>{ui_dist}%</code><br>
-    • Fitted Intercept Parameter (\\beta_0): <code>{sim_b0}</code><br>
-    • Fitted Elasticity Slope (\\beta_1): <code>{sim_b1}</code><br><br>
-    • <b>Objective Target Probability Density P(DGP):</b> <code>{target_dgp_prob:.3f}</code><br>
-    • <b>Model Probability Response Space Q(LLM):</b> <code>{computed_p_alignment:.3f}</code><br>
+    • Context State Tracked: <code>{ui_cond}</code> (Modulates <code>\\beta_0</code> and <code>\\beta_1</code> dynamically)<br>
+    • Data Inversion Strain (X): <code>{ui_dist}%</code> (In-context statistical stress boundary)<br>
+    • Fitted Intercept Parameter (\\beta_0): <code>{sim_b0}</code> (Intrinsic parametric bias)<br>
+    • Fitted Elasticity Slope (\\beta_1): <code>{sim_b1}</code> (Updating velocity constraint)<br><br>
+    • <b>Objective Target Probability Density P(DGP):</b> <code>{target_dgp_prob:.3f}</code> (Factual alignment target)<br>
+    • <b>Model Probability Response Space Q(LLM):</b> <code>{computed_p_alignment:.3f}</code> (Expected agent output distribution)<br>
     • <b>Run-Time Extrapolated Information Deficit:</b> <code>{computed_kl:.5f} nats of unexpected structural entropy</code>
     </div>
     """, unsafe_allow_html=True)

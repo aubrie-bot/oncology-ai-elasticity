@@ -2,11 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-import os
-import json
 
 # 1. Global Page Configuration (High-Density Academic UI Theme)
-st.set_page_config(page_title="Multi-Agent World-Model Elasticity in Oncology", layout="wide")
+st.set_page_config(page_title="LLM Cognitive Elasticity Research Proposal", layout="wide")
 
 # Advanced CSS injection for clinical reporting typography
 st.markdown("""
@@ -18,244 +16,262 @@ st.markdown("""
     .contribution-card { background-color: #F0FDF4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22C55E; margin-bottom: 1rem; }
     .analysis-card { background-color: #EFF6FF; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1rem; border: 1px solid #BFDBFE; }
     .math-block { background-color: #F8FAFC; padding: 1.25rem; border-radius: 0.5rem; border: 1px solid #E2E8F0; font-family: monospace; margin-bottom: 1rem; }
+    .warning-box { background-color: #FFFBEB; padding: 1.2rem; border-radius: 0.5rem; border-left: 4px solid #D97706; margin-bottom: 1rem; }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="report-title">🩺 Multi-Agent Breast Cancer Clinical Inference Protocol</div>', unsafe_allow_html=True)
-st.markdown('<div class="report-subtitle">When Clinical Semantics Disappear: Quantifying the Belief Updating Dynamics and World-Model Elasticity of Diverse Large Language Models Under Abstracted Treatment Allocation Structures</div>', unsafe_allow_html=True)
+st.markdown('<div class="report-title">🩺 LLM Cognitive Elasticity in Precision Oncology</div>', unsafe_allow_html=True)
+st.markdown('<div class="report-subtitle">A Standardized Binary Logistic Regression Prototyping Engine for Quantifying Multi-Agent Belief Updating Under Structured Terminology Ablation</div>', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="warning-box">
+💡 <b>RESEARCH PROPOSAL SIMULATION FRAMEWORK (MOCK PORTAL)</b><br>
+This platform serves as a <b>Conceptual Proof-of-Concept</b> for grant review and pilot methodology tracking. 
+All behavioral curves, responses, and parameters mapped herein denote <b>Hypothesized Phenotypic Trajectories</b>. 
+No real commercial API execution calls have been instantiated at this validation tier.
+</div>
+""", unsafe_allow_html=True)
 
 # Sidebar Navigation Control
 menu = st.sidebar.radio(
     "📋 Protocol Navigation", 
-    ["Abstract & Clinical Background", "Methodology & Formal Mathematics", "Expected Empirical Outcomes", "Interactive 3x5 Multi-Model Matrix"]
+    [
+        "Research Question", 
+        "Experimental Design", 
+        "Elasticity Simulation", 
+        "Posterior Flip Threshold (PFT)", 
+        "Interactive Explorer & KL Matrix"
+    ]
 )
 
 # ==========================================
-# ADVANCED MATHEMATICAL EMPIRICAL DATA LOADER
+# SCIENTIFIC COMPUTATION ENGINES
 # ==========================================
-def load_bc_empirical_data():
-    distortions = [0, 30, 50, 70, 90]
-    data_list = []
-    
-    for dist in distortions:
-        # 1. Normative Baseline (Ideal Bayesian Observer Limit)
-        bayes_val = dist if dist >= 50 else (dist * 0.8)
-        data_list.append({"Agent": "Ideal Bayesian Observer", "Condition": "Theoretical Limit", "Distortion": dist, "P_Alignment": bayes_val})
-        
-        # 2. OpenAI GPT-4o Profiles (Prior-Rigid / High Parametric Anchor)
-        data_list.append({"Agent": "GPT-4o", "Condition": "Condition A (Minimal)", "Distortion": dist, "P_Alignment": 5 if dist < 70 else 88})
-        data_list.append({"Agent": "GPT-4o", "Condition": "Condition B (Partial)", "Distortion": dist, "P_Alignment": 8 if dist < 50 else (55 if dist == 50 else 91)})
-        data_list.append({"Agent": "GPT-4o", "Condition": "Condition C (Full)", "Distortion": dist, "P_Alignment": dist + 4 if (dist + 4) <= 100 else 100})
-        
-        # 3. Google Gemini 1.5 Pro Profiles (Empirical-Dominant / Context Sensitive)
-        data_list.append({"Agent": "Gemini 1.5 Pro", "Condition": "Condition A (Minimal)", "Distortion": dist, "P_Alignment": 8 if dist < 30 else 94})
-        data_list.append({"Agent": "Gemini 1.5 Pro", "Condition": "Condition B (Partial)", "Distortion": dist, "P_Alignment": 12 if dist < 30 else 96})
-        data_list.append({"Agent": "Gemini 1.5 Pro", "Condition": "Condition C (Full)", "Distortion": dist, "P_Alignment": dist + 5 if (dist + 5) <= 100 else 100})
-        
-        # 4. Anthropic Claude 3.5 Sonnet Profiles (Balanced Synthesis)
-        data_list.append({"Agent": "Claude 3.5 Sonnet", "Condition": "Condition A (Minimal)", "Distortion": dist, "P_Alignment": 6 if dist < 50 else (65 if dist == 50 else 90)})
-        data_list.append({"Agent": "Claude 3.5 Sonnet", "Condition": "Condition B (Partial)", "Distortion": dist, "P_Alignment": 10 if dist < 50 else (75 if dist == 50 else 93)})
-        data_list.append({"Agent": "Claude 3.5 Sonnet", "Condition": "Condition C (Full)", "Distortion": dist, "P_Alignment": dist + 2 if (dist + 2) <= 100 else 100})
-        
-    return pd.DataFrame(data_list)
+def logistic_response(x, beta0, beta1):
+    """Standard Binary Logistic Link Function tracking Evidence Alignment Odds"""
+    logit = beta0 + beta1 * (x / 100)
+    return 1 / (1 + np.exp(-logit))
 
-df_bc = load_bc_empirical_data()
+def compute_kl_divergence(p_prob, q_prob):
+    """
+    Computes empirical Kullback-Leibler Divergence between two binary probability distributions.
+    P denotes the target baseline distribution vector; Q denotes the agent distribution vector.
+    """
+    # Clip values to guarantee structural numerical safety bounds against log(0)
+    p = np.clip([p_prob, 1.0 - p_prob], 1e-12, 1.0 - 1e-12)
+    q = np.clip([q_prob, 1.0 - q_prob], 1e-12, 1.0 - 1e-12)
+    return np.sum(p * np.log(p / q))
 
 # ==========================================
-# SECTION 1: ABSTRACT & BACKGROUND
+# PAGE 1: RESEARCH QUESTION
 # ==========================================
-if menu == "Abstract & Clinical Background":
-    st.markdown('<div class="section-header">1. Introduction & Clinical Bottleneck</div>', unsafe_allow_html=True)
-    st.markdown("""
-    In precision oncology, leveraging Large Language Models (LLMs) to support Multidisciplinary Tumor Boards (MDT) is an expanding frontier. However, contemporary evaluation frameworks rely heavily on superficial **Question-Answering (QA) Accuracy** or direct consensus alignment with medical guidelines. This simplistic benchmarking introduces a critical regulatory vulnerability: **it fails to distinguish whether an LLM has genuinely mapped the underlying statistical covariance of patient features, or if it is merely performing verbatim post-hoc retrieval of learned training nomenclature.**
+if menu == "Research Question":
+    st.markdown('<div class="section-header">Clinical Motivation & Informational Blindspots</div>', unsafe_allow_html=True)
+    st.write("""
+    Contemporary Large Language Model (LLM) benchmarking frameworks in digital medicine focus extensively on standard diagnostic agreement scores, 
+    verbatim Question-Answering (QA) accuracy, or direct replication of consensus guidelines (e.g., NCCN guidelines). 
+    However, static accuracy benchmarking suffers from a critical epistemological limitation: **it cannot determine whether a model has genuinely mapped the underlying statistical covariance of complex patient parameters, or if it is merely performing shallow pattern retrieval of memorized medical terminology.**
     
-    In clinical practice, the most hazardous failures occur within **atypical patient subcohorts** who fall outside standard clinical trials (e.g., elderly breast cancer patients presenting with severe preexisting interstitial lung disease or compromised cardiac function). If an AI model suffers from dogmatic rigidity—relying purely on guideline nomenclature while ignoring empirical safety signals within the current dataset—it poses a severe risk to patient safety.
+    If a deployed model exhibits rigid semantic anchoring, it presents severe risks within highly heterogeneous clinical subsets. For instance, when treating an atypical breast cancer cohort where standard guideline pathways are contradicted by localized patient toxicity variables, a rigid model may continuously override active statistical evidence in favor of memorized nomenclature—jeopardizing downstream safety constraints within a Multidisciplinary Tumor Board (MDT).
     """)
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown('<div class="metric-card">🎯 <b>Core Research Question</b><br><br>When clinical semantic labels are systematically removed, and empirical evidence directly contradicts established guidelines, to what degree does an LLM rely on its <b>pre-trained semantic priors</b> versus the newly <b>observed empirical statistical structure</b>?</div>', unsafe_allow_html=True)
-    with col2:
-        st.markdown('<div class="metric-card">🧠 <b>Bayesian Cognition Framework</b><br><br>This framework shifts the evaluation paradigm from accuracy metrics to <b>belief updating dynamics</b>. By subjecting multiple distinct model architectures to structured informational stress, we map the mathematical elasticity of their internal medical world models under explicit semantic deprivation.</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="section-header">2. Formal Scientific Hypotheses</div>', unsafe_allow_html=True)
-    st.markdown("""
-    * **H1 — Semantic Prior Dominance Hypothesis**: LLM clinical inference is highly dependent on explicit semantic anchors. When regimen nomenclature and biomarker labels are intact, models exhibit *prior rigidity*, adhering to baseline guidelines even when empirical data reflects an heavily distorted treatment decision rule.
-    * **H2 — Statistical Structure Reconstruction Hypothesis**: If the latent statistical covariance is sufficiently robust, LLMs are capable of performing *latent ontology reconstruction*—inferring complex clinical modalities entirely from feature distributions and decision asymmetries, independent of linguistic labels.
-    * **H3 — Belief Updating Threshold Heterogeneity Hypothesis**: Distinct LLM architectures exhibit highly divergent *Posterior Flip Thresholds (PFT)*, indexing their internal structural trade-offs between pre-trained semantic weights and active empirical evidence.
+    st.markdown('<div class="section-header">Core Informational Stress Hypotheses</div>', unsafe_allow_html=True)
+    st.info("""
+    <b>Central Research Objective:</b> When explicit clinical domain labels are systematically ablated and the immediate dataset distribution directly contradicts historical text-book guidelines, does a transformer-based agent rely on its <b>Pre-trained Semantic Prior Knowledge</b> or its capacity to reconstruct <b>Latent Statistical Data Structures</b>?
     """)
 
 # ==========================================
-# SECTION 2: METHODOLOGY & FORMAL MATHEMATICS (完全重寫：公式化與學術推導)
+# PAGE 2: EXPERIMENTAL DESIGN
 # ==========================================
-elif menu == "Methodology & Formal Mathematics":
-    st.markdown('<div class="section-header">1. Formal Mathematical Modeling of Belief Updating</div>', unsafe_allow_html=True)
-    st.markdown("""
-    To formalize artificial clinical cognition, we model the LLM as a computational agent navigating an information-theoretic decision space. 
-    Let $H_G$ denote the hypothesis that the standard clinical guideline holds true, and $H_E$ denote the alternative hypothesis driven by the empirically distorted dataset.
+elif menu == "Experimental Design":
+    st.markdown('<div class="section-header">1. Standardized 3 × 5 Stress Testing Matrix</div>', unsafe_allow_html=True)
+    st.write("The proposed framework maps cognitive degradation trajectories by cross-referencing three discrete states of terminology deprivation against five gradients of data distribution distortion utilizing a locked cohort of N=2000 synthetic patient vectors.")
     
-    The model's internal posterior belief ratio is governed by a modified Bayesian inference framework with an architectural rigidity coefficient $\gamma$:
-    """)
-    
-    st.latex(r"\log \frac{P(H_E \mid D)}{P(H_G \mid D)} = \gamma \cdot \log \frac{P(H_E)}{P(H_G)} + \sum_{i=1}^{N} \log \frac{P(D_i \mid H_E)}{P(D_i \mid H_G)}")
-    
-    st.markdown("""
-    Where:
-    * $\gamma \ge 1$ represents the **Prior Rigidity Index (PRI)**, parameterizing the model's structural resistance to out-of-distribution (OOD) empirical data.
-    * $D_i$ represents the individual patient profile drawn from the synthetic cohort ($N=2000$).
-    """)
-    
-    st.markdown('<div class="section-header">2. Mathematical Formulation of the 3 Abstraction Conditions</div>', unsafe_allow_html=True)
-    
-    math_col1, math_col2, math_col3 = st.columns(3)
-    with math_col1:
-        st.markdown("### Condition A: Parametric Anchor")
-        st.latex(r"\gamma_{A} \gg 1")
-        st.caption("Standard medical nomenclature (e.g., HER2+, BRCA) is intact. The pre-trained linguistic weights act as an ironclad anchor, maximizing prior rigidity and suppressing statistical observations.")
-    with math_col2:
-        st.markdown("### Condition B: Partial Ablation")
-        st.latex(r"\gamma_{B} \to 1")
-        st.caption("Linguistic tokens are anonymized (e.g., Biomarker B). The semantic anchor degrades, forcing the model to transition into a semi-balanced probabilistic estimator.")
-    with math_col3:
-        st.markdown("### Condition C: Full Eradication")
-        st.latex(r"P(H) \sim \mathcal{U}(0, 1) \implies \gamma_{C} \to 0")
-        st.caption("Complete token symbolization (Features 1-5). The prior collapses to a uniform distribution, compelling the LLM to function exclusively as a pure statistical covariance mapper.")
+    matrix_df = pd.DataFrame({
+        "Condition Layer": ["Condition A", "Condition B", "Condition C"],
+        "Operational Extraction State": ["Original Medical Terminology", "Partial Semantic Abstraction", "Full Structural Symbolization"],
+        "Linguistic Execution Rules": [
+            "All canonical diagnostic text strings, molecular classifications, and target intervention keywords are fully retained (e.g., 'HER2 Overexpression', 'Left Ventricular Ejection Fraction (LVEF) %', 'Trastuzumab Deruxtecan').",
+            "Primary domain descriptors are masked or swapped with generic alphanumeric string place-holders (e.g., 'Biomarker B', 'Functional Parameter 2', 'Therapeutic Agent X') to intentionally break zero-shot textbook matching loops.",
+            "Complete erasure of clinical syntax. All dimensional boundaries are mapped to pure mathematical notation (e.g., 'Feature 1', 'Feature 2', 'Target Class Alpha'), reducing the environment to an unanchored pattern discovery space."
+        ]
+    })
+    st.dataframe(matrix_df, use_container_width=True, hide_index=True)
 
-    st.markdown('<div class="section-header">3. Information-Theoretic Distance & Human Expert Control Limit</div>', unsafe_allow_html=True)
-    st.markdown("""
-    To quantify the behavioral divergence between different model architectures and human expert benchmarks, we compute the **Kullback-Leibler (KL) Divergence** between the model's posterior decision vector $Q(X)$ and the ideal Bayesian normative distribution $P(X)$:
-    """)
-    
-    st.latex(r"D_{\text{KL}}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log \frac{P(x)}{Q(x)}")
-    
-    st.markdown("""
-    * **Human Expert Baseline Limit**: Modeled as an adaptive agent with bounded rationality, exhibiting a smooth calibration window ($D_{\text{KL}} \le 0.15$ under mild noise) but protecting absolute safety constraints (e.g., exponential exclusion rules when Left Ventricular Ejection Fraction $\le 45\%$).
-    * **Stochastic Allocation Noise**: To maintain clinical realism, a 15% random assignment shuffle is injected via a localized Gaussian noise vector $\epsilon \sim \mathcal{N}(0, \sigma^2)$ into the data generating process (DGP), preventing artificial linear separability.
-    """)
+    st.markdown('<div class="section-header">2. Contradiction Distortion Gradients</div>', unsafe_allow_html=True)
+    dist_df = pd.DataFrame({
+        "Distortion Gradient (X%)": [0, 30, 50, 70, 90],
+        "Cohort Covariance Trajectory": [
+            "Guideline Consistent: Clinical assignment strictly maps historical distribution logic.",
+            "Mild Conflict: Stochastic decision noise introduced; initial signal decoupling.",
+            "Balanced Evidence: Maximum statistical entropy; historical pathways provide no information.",
+            "Strong Conflict: Inverse operational mapping; active empirical signals override guidelines.",
+            "Near Complete Reversal: Structural inversion of classic precision oncology assignment logic."
+        ]
+    })
+    st.dataframe(dist_df, use_container_width=True, hide_index=True)
 
 # ==========================================
-# SECTION 3: EXPECTED OUTCOMES
+# PAGE 3: ELASTICITY SIMULATION (RESTRUCTURING PER REVIEWS)
 # ==========================================
-elif menu == "Expected Empirical Outcomes":
-    st.markdown('<div class="section-header">1. Primary Quantitative Curves & Phase Transitions</div>', unsafe_allow_html=True)
-    st.markdown("### Figure 1: Multi-Agent Belief Updating Trajectories Across Conditions")
-    st.markdown("The chart below maps the sigmoid transition curves of the distinct computational models moving from guideline compliance to active empirical alignment as the data distortion increases.")
+elif menu == "Elasticity Simulation":
+    st.markdown('<div class="section-header">Hypothesized Phenotypic Trajectories Across Cognitive Profiles</div>', unsafe_allow_html=True)
+    st.write("To establish formal falsifiability parameters prior to actual API blind testing, we model three distinct hypothetical cognitive archetypes navigating data distortion pressure:")
 
-    # High-density Plotly Chart Generation
+    x_line = np.linspace(0, 100, 200)
+    
+    # Mathematical execution of standard logistic profiles with clear, clean parameter weights
+    y_rigid = logistic_response(x_line, -5.5, 9.5)
+    y_balanced = logistic_response(x_line, -4.0, 7.5)
+    y_adaptive = logistic_response(x_line, -2.5, 6.0)
+
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[0,30,50,70,90], mode='lines', name="Ideal Bayesian Observer (Theoretical Normative)", line=dict(color="black", dash="dot")))
     
-    # Condition A (Minimal) Profiles
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[5,5,5,15,88], mode='lines+markers', name="GPT-4o - Condition A (High Rigidity)", line=dict(color="#EF553B", width=3)))
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[8,8,94,94,95], mode='lines+markers', name="Gemini 1.5 Pro - Condition A (Empirical Dominance)", line=dict(color="#00CC96", width=3)))
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[6,6,65,90,90], mode='lines+markers', name="Claude 3.5 Sonnet - Condition A (Balanced)", line=dict(color="#AB63FA", width=3)))
+    # Corrected Ground Truth representation per reviewer prompt: Direct identity line (Y=X)
+    fig.add_trace(go.Scatter(x=x_line, y=x_line / 100, mode="lines", name="DGP Ground Truth (Optimal Linear Observer)", line=dict(color="black", dash="dot", width=2)))
     
-    # Condition B & C Control Profiles (GPT-4o Sampled)
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[8,8,55,91,91], mode='lines+markers', name="GPT-4o - Condition B (Ablated Biomarkers)", line=dict(color="#FFA15A", width=2, dash="dash")))
-    fig.add_trace(go.Scatter(x=[0,30,50,70,90], y=[4,34,54,74,94], mode='lines+markers', name="GPT-4o - Condition C (Pure Structural)", line=dict(color="#636EFA", width=2, dash="dash")))
+    fig.add_trace(go.Scatter(x=x_line, y=y_rigid, mode="lines", name="High-Rigidity Profile (Hypothesized Prior Retention)", line=dict(color="#EF4444", width=3)))
+    fig.add_trace(go.Scatter(x=x_line, y=y_balanced, mode="lines", name="Balanced Profile (Hypothesized Syncretic Updating)", line=dict(color="#8B5CF6", width=2.5, dash="dash")))
+    fig.add_trace(go.Scatter(x=x_line, y=y_adaptive, mode="lines", name="Adaptive Profile (Hypothesized Data Responsiveness)", line=dict(color="#10B981", width=2.5, dash="dot")))
     
+    fig.add_hline(y=0.5, line_dash="dot", line_color="gray", annotation_text="Equilibrium Odds Point P(Y=1) = 0.5")
+
     fig.update_layout(
-        xaxis_title="Guideline Distortion Gradient (%: 0% Standard --► 90% Completely Inverted)",
-        yaxis_title="Posterior Alignment with Empirical Evidence (%)",
         template="plotly_white",
-        height=520,
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+        height=540,
+        xaxis_title="Statistical Distortion Pressure Gradient (X%)",
+        yaxis_title="Probability of Evidence-Aligned Choice P(Y=1)",
+        legend=dict(yanchor="bottom", y=0.02, xanchor="right", x=0.98)
     )
-    fig.add_shape(type="line", x0=0, y0=50, x1=90, y1=50, line=dict(color="gray", dash="dash"))
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Deconstruction of Curve Discontinuities
-    st.markdown('<div class="section-header">2. Deconstruction of Phase Transition Mechanics (Why the Curves Bifurcate)</div>', unsafe_allow_html=True)
-    
-    desc_gpt_a = (
-        "Phenomenon: Under Condition A, GPT-4o flatlines at 5% alignment up to 50% distortion, "
-        "followed by a steep, abrupt mathematical leap at 70%.\n\n"
-        "Mechanistic Explanation: Retaining explicit breast cancer clinical labels (HER2, HR, gBRCA) "
-        "activates the pre-trained medical ontology network at maximum strength. Under moderate evidence "
-        "conflict (<50%), the model over-allocates weight to its Semantic Prior, classifying empirical anomalies "
-        "as stochastic data noise. A decision-making phase transition is only triggered when evidence conflict "
-        "crosses a critical 70% pressure boundary, resulting in a sudden, catastrophic posterior reorganization "
-        "rather than a smooth Bayesian update."
-    )
-    
-    desc_gpt_bc = (
-        "Phenomenon: Moving from Condition A to B and C, GPT-4o's inflection points advance smoothly "
-        "to the 50% equilibrium mark, linearizing the transition.\n\n"
-        "Mechanistic Explanation: Masking categorical medical tokens (Condition B) or fully symbolicating "
-        "variables (Condition C) erases the model's internal medical world model (where the prior probability "
-        "approximates a uniform distribution). Deprived of linguistic safety ropes, the internal prior rigidity (PRI) "
-        "decreases significantly, defaulting the agent to a high-dimensional pattern recognizer. The output becomes "
-        "dictated solely by the empirical covariance matrix, demonstrating that AI dogmatism is highly contingent "
-        "upon superficial linguistic nomenclature."
-    )
-    
-    desc_gemini = (
-        "Phenomenon: Even with intact semantic markers (Condition A), the model completely abandons clinical "
-        "guidelines prematurely at a low 30% distortion gradient.\n\n"
-        "Mechanistic Explanation: This exposes a profound architectural divergence in internal inductive bias. "
-        "Gemini 1.5 Pro's attention layers are highly sensitized to in-context statistical distributions over global "
-        "parametric memories. While highly adaptive, this poses severe clinical risks: the model lacks rational "
-        "skepticism, deserting human breast cancer knowledge in favor of localized, noisy, or systematically biased "
-        "datasets at the first sign of statistical asymmetry."
-    )
-    
-    desc_claude = (
-        "Phenomenon: Demonstrates a stable sigmoidal step right at the 50% information entropy mark under Condition A.\n\n"
-        "Mechanistic Explanation: Claude 3.5 Sonnet represents a balanced cognitive synthesis. It maintains defensive "
-        "parametric priors when evidence is ambiguous (<30%) to safeguard critical patient boundaries (e.g., cardiotoxicity "
-        "counter-indications), but successfully executes a calibrated belief update once the empirical likelihood establishes "
-        "true statistical dominance at the 50% threshold."
-    )
-    
-    ana1, ana2 = st.columns(2)
-    with ana1:
-        st.subheader("🔴 OpenAI GPT-4o Profiles")
-        st.info(desc_gpt_a)
-        st.info(desc_gpt_bc)
 
-    with ana2:
-        st.subheader("🟢 Google Gemini & 🟣 Anthropic Claude")
-        st.warning(desc_gemini)
-        st.success(desc_claude)
+    st.markdown('<div class="section-header">Mathematical Optimization Axiom</div>', unsafe_allow_html=True)
+    st.write("The underlying probability distribution mapping the choice matrix is analyzed via the standard empirical logistic regression function:")
+    st.latex(r"\log \left( \frac{P(Y=1 \mid X)}{1 - P(Y=1 \mid X)} \right) = \beta_0 + \beta_1 X")
 
-    st.markdown('<div class="section-header">3. Scientific Contribution & Clinical Utility</div>', unsafe_allow_html=True)
-    col_a, col_b, col_c = st.columns(3)
-    with col_a:
-        st.markdown('<div class="contribution-card">🛡️ <b>MDT Safety & SaMD Safety Boundaries</b><br><br>Establishes rigorous safety metrics for Software as a Medical Device (SaMD). It exposes whether an AI will overlook active treatment toxicity patterns (e.g., giving cardiotoxic ADCs to heart failure subcohorts) due to dogmatic guide-book memorization.</div>', unsafe_allow_html=True)
-    with col_b:
-        st.markdown('<div class="contribution-card">🔒 <b>Privacy-Preserving Data Synthesis</b><br><br>Validates the reverse-identifiable nature of clinical decisions. Proving latent ontology mapping under Condition C confirms that multi-center data networks can securely share fully symbolicated cohorts without exposing sensitive molecular or proprietary identifiers.</div>', unsafe_allow_html=True)
-    with col_c:
-        st.markdown('<div class="contribution-card">📈 <b>Optimal Deployment Architecture</b><br><br>Provides an objective framework for safe clinical assignment: High-Rigidity models (e.g., GPT) are optimized to act as conservative gatekeepers for standard frontline guidelines, whereas Empirical-Dominance models (e.g., Gemini) are uniquely suited for early pharmacovigilance tracking.</div>', unsafe_allow_html=True)
+    col_hyp1, col_hyp2 = st.columns(2)
+    with col_hyp1:
+        st.markdown("""
+        <div class="analysis-card" style="border-left-color: #EF4444;">
+        <b>Expected Phenotype — High-Rigidity Profile:</b><br>
+        If an agent exhibits elevated parametric anchoring ($\beta_0 \ll 0$), it is hypothesized to remain non-responsive to empirical data asymmetries under low-to-moderate stress conditions ($X < 50\%$). A phase transition into evidence alignment is expected to materialize only under extreme distortion pressure ($X \ge 70\%$).
+        </div>
+        """, unsafe_allow_html=True)
+    with col_hyp2:
+        st.markdown("""
+        <div class="analysis-card" style="border-left-color: #10B981;">
+        <b>Expected Phenotype — Adaptive Profile:</b><br>
+        If an agent's internal architecture prioritizes in-context distributions over weights memorization ($\beta_0 \to 0$), the model may exhibit an accelerated, linear shift along the gradient, migrating toward empirical evidence alignment significantly earlier in the timeline.
+        </div>
+        """, unsafe_allow_html=True)
 
 # ==========================================
-# SECTION 4: INTERACTIVE 3X5 MULTI-MODEL MATRIX (保留其動態單點查核功能)
+# PAGE 4: POSTERIOR FLIP THRESHOLD (PROPOSAL CORE UPGRADE)
+# ==========================================
+elif menu == "Posterior Flip Threshold (PFT)":
+    st.markdown('<div class="section-header">1. Operationalization of the PFT Primary Metric ($X^*$)</div>', unsafe_allow_html=True)
+    st.write("""
+    A primary contribution of this methodology is the formulation of the **Posterior Flip Threshold (PFT)**. 
+    PFT isolates the exact mathematical coordinate along the data distortion axis where the model's internal belief state crosses equilibrium ($P(Y=1) = 0.5$). 
+    Solving for the logit activation equal to zero yields the exact critical boundary metric:
+    """)
+    
+    st.latex(r"X^* = -\frac{\beta_0}{\beta_1} \times 100")
+
+    # Dynamic modeling widgets
+    col_pft1, col_pft2 = st.columns(2)
+    with col_pft1:
+        input_b0 = st.slider(r"Beta_0 (\beta_0 : Parametric Adherence Bias)", -10.0, -0.5, -5.0, step=0.1)
+    with col_pft2:
+        input_b1 = st.slider(r"Beta_1 (\beta_1 : Data Sensitivity Velocity)", 1.0, 15.0, 8.0, step=0.1)
+
+    calculated_pft = (-input_b0 / input_b1) * 100
+
+    if calculated_pft > 100:
+        st.error(f"🚨 Configuration Deficit: Estimated PFT is out of functional experimental boundaries ({calculated_pft:.1f}%). The simulated profile will remain completely non-responsive to evidence transitions across the entire continuum.")
+    else:
+        st.metric(label="Estimated Posterior Flip Threshold (PFT Metric)", value=f"{calculated_pft:.1f}%")
+
+    # Render dynamic PFT tracking plot
+    x_range = np.linspace(0, 100, 200)
+    y_dynamic = logistic_response(x_range, input_b0, input_b1)
+
+    fig_pft = go.Figure()
+    fig_pft.add_trace(go.Scatter(x=x_range, y=y_dynamic, mode="lines", name="Simulated Cognitive Path", line=dict(color="#2563EB", width=3)))
+    fig_pft.add_hline(y=0.5, line_dash="dot", line_color="gray", annotation_text="Equilibrium (P=0.5)")
+    if calculated_pft <= 100:
+        fig_pft.add_vline(x=calculated_pft, line=dict(color="#EF4444", width=2), annotation_text=f"Inflection Coordinate: {calculated_pft:.1f}%")
+
+    fig_pft.update_layout(template="plotly_white", height=400, xaxis_title="Distortion Gradient (%)", yaxis_title="Probability Distribution")
+    st.plotly_chart(fig_pft, use_container_width=True)
+
+    st.markdown('<div class="section-header">2. Hypothetical Pilot Prototyping Reference Matrix</div>', unsafe_allow_html=True)
+    st.write("This standardized mapping table represents the core comparative tracking baseline designed for the final empirical results chapter:")
+    
+    tracking_table = pd.DataFrame({
+        "Experimental Profile Group": ["High-Rigidity Archetype (Hypothesized)", "Balanced Archetype (Hypothesized)", "Adaptive Archetype (Hypothesized)"],
+        "Target Condition Map": ["Condition A (Intact Language)", "Condition B (Partial Anonymization)", "Condition C (Pure Mathematical Symbols)"],
+        "Simulated Intercept (Beta_0)": [-5.5, -4.0, -2.5],
+        "Simulated Slope (Beta_1)": [9.5, 7.5, 6.0],
+        "Calculated PFT Boundary (X*)": ["57.9%", "53.3%", "41.7%"]
+    })
+    st.table(tracking_table)
+
+# ==========================================
+# PAGE 5: INTERACTIVE EXPLORER & LIVE KL MATRIX (COMPUTATION CLOSURE)
 # ==========================================
 else:
-    st.header("🎛️ High-Stress Informational Matrix Audit")
-    st.caption("Select explicit coordinates across the 3x5 stress grid to audit behavioral drift and posterior transition thresholds across all tested model architectures.")
+    st.markdown('<div class="section-header">Dynamic Matrix Point Auditor & Information Entropy Evaluator</div>', unsafe_allow_html=True)
+    st.write("Select specific intersection coordinates across the 3x5 experimental grid. The dashboard will instantly run runtime numerical executions for choice probabilities and real-time Kullback-Leibler Divergence tracking.")
+
+    sel_col, dist_col = st.columns(2)
+    with sel_col:
+        ui_cond = st.selectbox("Target Condition Tier", ["Condition A", "Condition B", "Condition C"])
+    with dist_col:
+        ui_dist = st.select_slider("Target Distortion Pressure Input", options=[0, 30, 50, 70, 90])
+
+    # Enforce static conditional mapping definitions matching the verified proposal constraints
+    if ui_cond == "Condition A":
+        sim_b0, sim_b1 = -5.5, 9.5
+    elif ui_cond == "Condition B":
+        sim_b0, sim_b1 = -4.0, 7.5
+    else:
+        sim_b0, sim_b1 = -2.5, 6.0
+
+    # Runtime probability execution via logistic link function
+    computed_p_alignment = logistic_response(ui_dist, sim_b0, sim_b1)
     
-    c_col, d_col = st.columns(2)
-    with c_col:
-        selected_cond = st.selectbox(
-            "Select Semantic Abstraction Tier", 
-            ["Condition A (Minimal)", "Condition B (Partial)", "Condition C (Full)"]
-        )
-    with d_col:
-        selected_dist = st.selectbox(
-            "Select Guideline Distortion Level", 
-            [0, 30, 50, 70, 90], 
-            format_func=lambda x: f"{x}% Covariance Distortion"
-        )
-        
-    target_df = df_bc[(df_bc["Condition"] == selected_cond) & (df_bc["Distortion"] == selected_dist)]
-    
-    if not target_df.empty:
-        st.subheader("Model Alignment Profiles at Selected Coordinate")
-        for idx, row in target_df.iterrows():
-            col_m1, col_m2 = st.columns(2)
-            with col_m1:
-                status = "Inference Overridden by Empirical Structure" if row['P_Alignment'] > 50 else "Adhering to Pre-trained Semantic Prior"
-                st.metric(label=f"📊 Model: {row['Agent']}", value=status)
-            with col_m2:
-                st.metric(label="Posterior Alignment Probability", value=f"{row['P_Alignment']}%")
-            st.markdown("---")
+    # Corrected target baseline per reviewer feedback: DGP probability directly corresponds to distortion ratio
+    target_dgp_prob = ui_dist / 100.0
+
+    # Runtime math execution of actual Kullback-Leibler Divergence metric
+    computed_kl = compute_kl_divergence(target_dgp_prob, computed_p_alignment)
+
+    # UI Metric Blocks
+    m_col1, m_col2 = st.columns(2)
+    with m_col1:
+        st.metric("Evidence-Aligned Response Probability", f"{computed_p_alignment*100:.1f}%")
+    with m_col2:
+        if np.isnan(computed_kl) or np.isinf(computed_kl):
+            st.metric("Real-Time KL-Divergence D_KL(P||Q)", "Indeterminate (Zero Variance State)")
+        else:
+            st.metric("Real-Time KL-Divergence D_KL(P||Q)", f"{computed_kl:.4f} nats")
+
+    st.markdown("""
+    <style>
+    .math-card { background-color: #F8FAFC; padding: 1.25rem; border-radius: 8px; border: 1px solid #E2E8F0; margin-top: 15px; }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="math-card">
+    <b>Active Verification Telemetry Log:</b><br><br>
+    • Context State Tracked: <code>{ui_cond}</code><br>
+    • Data Inversion Strain (X): <code>{ui_dist}%</code><br>
+    • Fitted Intercept Parameter (\\beta_0): <code>{sim_b0}</code><br>
+    • Fitted Elasticity Slope (\\beta_1): <code>{sim_b1}</code><br><br>
+    • <b>Objective Target Probability Density P(DGP):</b> <code>{target_dgp_prob:.3f}</code><br>
+    • <b>Model Probability Response Space Q(LLM):</b> <code>{computed_p_alignment:.3f}</code><br>
+    • <b>Run-Time Extrapolated Information Deficit:</b> <code>{computed_kl:.5f} nats of unexpected structural entropy</code>
+    </div>
+    """, unsafe_allow_html=True)

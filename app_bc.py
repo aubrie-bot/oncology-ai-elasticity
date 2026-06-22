@@ -253,4 +253,3 @@ These values are hypothetical and
 serve only to illustrate the study framework.
 """
     )
-```

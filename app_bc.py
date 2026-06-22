@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 # 1. PAGE CONFIGURATION & ACADEMIC EDITORIAL STYLING
 # ======================================================
 st.set_page_config(
-    page_title="CRSAF Research Proposal",
+    page_title="CRSAF Clinical Stability Framework",
     layout="wide"
 )
 
@@ -35,7 +35,6 @@ def dgp_simulation(beta, seed=42):
     score = 2.0 - beta / 35.0 + noise
     return 1 / (1 + np.exp(-score))
 
-
 def model_expected_response(alpha, beta, model_name, seed=42):
     truth = dgp_simulation(beta)
     profile_idx = {
@@ -57,7 +56,6 @@ def model_expected_response(alpha, beta, model_name, seed=42):
         crc = truth * (0.5 + 0.5 * decay)
 
     return float(np.clip(crc + noise, 0, 1))
-
 
 # ======================================================
 # 3. PROPOSAL MATRIX SYNTHESIS (6x5 Design = 30 Cells)
@@ -90,7 +88,6 @@ df_proposal = pd.DataFrame(rows)
 def logistic_decay_model(x, L, k, x0, ymin):
     return ymin + (L - ymin) / (1 + np.exp(k * (x - x0)))
 
-
 def estimate_expected_cdrt(sub_df):
     x = np.sort(sub_df["alpha"].unique())
     y = sub_df.groupby("alpha")["crc"].mean().values
@@ -104,7 +101,6 @@ def estimate_expected_cdrt(sub_df):
         return float(popt[2])
     except Exception:
         return float(np.median(x))
-
 
 # ======================================================
 # 5. SIDEBAR PROPOSAL NAVIGATION
@@ -146,6 +142,8 @@ To develop objective, non-ranking behavioral indices that can serve as reliable 
 # ======================================================
 elif page == "2. Methodology Framework":
     st.markdown("<div class='h'>Methodology Framework</div>", unsafe_allow_html=True)
+    
+    # Using python raw string block to prevent backslash parsing errors in LaTeX
     st.markdown(r"""
 <div class='box'>
 <b>1. Clinical Sandbox Selection and Causal Grounding</b><br>
@@ -168,6 +166,8 @@ To eliminate stochastic sampling noise, all model API (Application Programming I
 # ======================================================
 elif page == "3. Sample Generation Mechanism":
     st.markdown("<div class='h'>Sample Generation Mechanism</div>", unsafe_allow_html=True)
+    
+    # Enforcing clean raw strings and explicit LaTeX wrappers to fix the bullet rendering bug
     st.markdown(r"""
 <div class='box'>
 To ensure strict falsifiability, the generation protocol for the synthetic clinical cohort and the subsequent 30-cell adversarial evaluation matrix is operationalized through three sequential steps:
@@ -175,16 +175,22 @@ To ensure strict falsifiability, the generation protocol for the synthetic clini
 <b>Step 1: Constructing the High-Dimensional Synthetic Breast Cancer Cohort ($N=2000$)</b><br>
 A structural matrix representing 2,000 synthetic patient profiles with advanced breast cancer will be programmatically generated via Python. Each patient profile consists of eight multi-dimensional clinical vectors:
 <br>
-• Causal Decision Variables: Age, HER2 Expression Status, germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status, and Left Ventricular Ejection Fraction (LVEF %).<br>
-• Nuisance Covariates (Noise): Breast Density, Anatomical Tumor Quadrant, Historical Biopsy Count, and Menopausal Status.
+• <i>Causal Decision Variables:</i> Age, HER2 Expression Status, germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status, and Left Ventricular Ejection Fraction (LVEF %).<br>
+• <i>Nuisance Covariates (Noise):</i> Breast Density, Anatomical Tumor Quadrant, Historical Biopsy Count, and Menopausal Status.
 <br><br>
 <b>Step 2: Mathematical Injection of Guideline Distortion (Factor B Gradient: $\beta$)</b><br>
-The cohort is subjected to a five-tier guideline distortion gradient ($\beta = 0\%, 25\%, 50\%, 75\%, 100\%$). 
-At $\beta = 0\%$, the DGP perfectly aligns with canonical guidelines (e.g., prescribing ADCs to eligible HER2+ patients with normal LVEF). At $\beta = 100\%$, a latent stochastic function systematically inverts the target labels (e.g., assigning highly dangerous therapeutic recommendations to patients with compromised cardiac function, such as LVEF $\le 30\%$). This creates an adversarial conflict against the model's parametric historical training weights. The underlying truth remains causally invariant across the text presentation layer.
+The cohort is subjected to a five-tier guideline distortion gradient where $\beta \in \{0\%, 25\%, 50\%, 75\%, 100\%\}$.
+<br>
+• At $\beta = 0\%$, the DGP perfectly aligns with canonical guidelines (e.g., prescribing ADCs to eligible HER2+ patients with normal LVEF).
+<br>
+• At $\beta = 100\%$, a latent stochastic function systematically inverts the target labels (e.g., assigning highly dangerous therapeutic recommendations to patients with compromised cardiac function, such as LVEF $\le 30\%$). This creates an adversarial conflict against the model's parametric historical training weights. The underlying truth remains causally invariant across the text presentation layer.
 <br><br>
 <b>Step 3: Execution of Progressive Semantic Ablation (Factor A Continuum: $\alpha$)</b><br>
-Prior to model processing, the 2,000 text prompts are modified across a six-tier semantic ablation gradient ($\alpha = 0\%, 20\%, 40\%, 60\%, 80\%, 100\%$). 
-At $\alpha = 0\%$, standard medical terms (e.g., `HER2 Positive`) are fully preserved. At $\alpha = 100\%$, explicit terminology is completely removed and anonymized into abstract feature labels (e.g., `Feature_1` through `Feature_8`), forcing the core neural networks to perform statistical inference based purely on numerical covariances without textual anchors.
+Prior to model processing, the 2,000 text prompts are modified across a six-tier semantic ablation gradient where $\alpha \in \{0\%, 20\%, 40\%, 60\%, 80\%, 100\%\}$.
+<br>
+• At $\alpha = 0\%$, standard medical terms (e.g., <code>HER2 Positive</code>) are fully preserved.
+<br>
+• At $\alpha = 100\%$, explicit terminology is completely removed and anonymized into abstract feature labels (e.g., <code>Feature_1</code> through <code>Feature_8</code>), forcing the core neural networks to perform statistical inference based purely on numerical covariances without textual anchors.
 </div>
 """, unsafe_allow_html=True)
 
@@ -193,8 +199,8 @@ At $\alpha = 0\%$, standard medical terms (e.g., `HER2 Positive`) are fully pres
 # ======================================================
 else:
     st.markdown("<div class='h'>Expected Research Outcomes & Visualizations</div>", unsafe_allow_html=True)
-
-    st.markdown(r"""
+    
+    st.markdown("""
 <div class='logic-box'>
 <b>💡 Theoretical Rationales for Audited Model Profiles</b><br>
 The hypothesized distinct trajectories injected into this proposal are derived from first principles of foundation model architectures and alignment mechanisms:
@@ -215,14 +221,14 @@ The hypothesized distinct trajectories injected into this proposal are derived f
 
     selected_m = st.segmented_control("Select Audited Model Profile to Preview Expected Trajectory", models, default=models[0])
     sub_m = df_proposal[df_proposal["model"] == selected_m]
-
+    
     df_b0 = sub_m[sub_m["beta"] == 0]
     df_b100 = sub_m[sub_m["beta"] == 100]
 
     fig_exp = go.Figure()
     fig_exp.add_trace(go.Scatter(x=df_b0["alpha"], y=df_b0["crc"], mode="lines+markers", name="Expected Baseline Control (β = 0%)", line=dict(color="#22C55E", width=3)))
     fig_exp.add_trace(go.Scatter(x=df_b100["alpha"], y=df_b100["crc"], mode="lines+markers", name="Expected High Stress Zone (β = 100%)", line=dict(color="#EF553B", width=3)))
-
+    
     fig_exp.update_layout(
         xaxis_title="Semantic Ablation Gradient (α%)",
         yaxis_title="Expected Clinical Recommendation Concordance (CRC)",
@@ -252,14 +258,15 @@ The hypothesized distinct trajectories injected into this proposal are derived f
     # Supplementary Notes & Reviewer Defense
     # --------------------------------------------------
     st.markdown("<div class='h'>Supplementary Notes & Interpretation Criteria</div>", unsafe_allow_html=True)
+    
     st.markdown(r"""
 <div class='box'>
 <b>Supplementary Note S1: Verification of Invariance Under Baseline Control (Green Line Trajectory)</b><br>
-As illustrated by the baseline control trajectory ($\beta = 0\%$) in Expected Figure 1, the framework projects that when empirical data perfectly mirrors standard guidelines, the model's CRC will remain uniformly high across the entire semantic ablation ($\alpha$) spectrum. This flat curve serves as a critical methodology defense. It proves to reviewers that abstracting text into numeric feature matrices does not inherently impair the foundational logical capacity of the network; the core clinical logic remains intact under pure symbolic conditions when no informational conflict is present.
+As illustrated by the baseline control trajectory where $\beta = 0\%$ in Expected Figure 1, the framework projects that when empirical data perfectly mirrors standard guidelines, the model's CRC will remain uniformly high across the entire semantic ablation continuum. This flat curve serves as a critical methodology defense. It proves to reviewers that abstracting text into numeric feature matrices does not inherently impair the foundational logical capacity of the network; the core clinical logic remains intact under pure symbolic conditions when no informational conflict is present.
 <br><br>
 <b>Supplementary Note S2: Non-linear Divergence Under High Adversarial Stress (Red Line Trajectory)</b><br>
-Conversely, under the high stress zone ($\beta = 100\%$), where clinical data directly contradicts standard historical guidelines (e.g., the cardiac hazard trap), progressive semantic ablation triggers a highly non-linear divergence across model architectures. 
-The acceleration rate and inflection points of the red curves capture the precise phase transition where the network's textual memory anchors are dismantled, forcing it to choose between parametric weights and raw contextual data distribution. The <b>GPT-4o</b> profile is projected to exhibit a high CDRT ($68\%$), indicating prolonged adherence to historical guidelines before a catastrophic delayed collapse. The <b>Gemini 1.5 Pro</b> profile is projected to shift much earlier ($32\%$), demonstrating a lower CDRT but greater resilience by adapting rapidly to empirical contextual truth.
+Conversely, under the high stress zone where $\beta = 100\%$, where clinical data directly contradicts standard historical guidelines (e.g., the cardiac hazard trap), progressive semantic ablation triggers a highly non-linear divergence across model architectures. 
+The acceleration rate and inflection points of the red curves capture the precise phase transition where the network's textual memory anchors are dismantled, forcing it to choose between parametric weights and raw contextual data distribution. The <b>GPT-4o</b> profile is projected to exhibit a high CDRT ($68\%$), indicating prolonged adherence to historical guidelines before a catastrophic delayed collapse. The <b>Gemini 1.5 Pro</b> profile is projected to shift much earlier ($32\%$), demonstrating a lower CDRT ($\alpha^*$) but greater resilience by adapting rapidly to empirical contextual truth.
 <br><br>
 <b>Supplementary Note S3: The Non-ranking Paradigm in Medical Regulatory Science</b><br>
 This framework intentionally rejects simplistic accuracy leaderboard rankings. In the context of SaMD regulation, a higher or lower CDRT ($\alpha^*$) does not indicate architectural superiority. Instead, it defines objective safety profiles: models with a high CDRT possess high instruction-following rigidity, making them ideal for highly standardized first-line oncology clinical pathways. Conversely, models with a lower CDRT are highly context-sensitive, making them better suited for prospective research applications such as early Adverse Drug Reaction (ADR) detection and identifying rare atypical patient anomalies.

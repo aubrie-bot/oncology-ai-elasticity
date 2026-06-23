@@ -161,105 +161,53 @@ The secondary endpoint is the Clinical Decision Reversal Threshold (CDRT), mathe
 """, unsafe_allow_html=True)
 
 # ======================================================
-# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS
+# SECTION 3: MATHEMATICAL DGP & CLINICAL TRANSLATION
 # ======================================================
 elif page == "3. Mathematical DGP & Descriptive Statistics":
-    st.markdown("<div class='h'>Mathematical Formulation of the Data-Generating Process (DGP)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='h'>Mathematical Formulation Anchored to Hematology-Oncology Endpoints</div>", unsafe_allow_html=True)
     
     st.markdown("""
 <div class='box'>
-To establish strict, mathematically reproducible causal logic, the synthetic patient cohort generation relies on an explicit probabilistic function. 
-Let each patient profile <i>i</i> (where <i>i</i> = 1, ..., 2000) be represented as a multi-dimensional vector. The latent true clinical recommendation probability, P(Y<sub>i</sub> = 1 | beta), is governed by the structural logistic equation:
+To resolve the structural limitations of generic simulation and achieve strict <b>clinical traceability</b> for oncology reviewers, this framework anchors the Data-Generating Process (DGP) directly onto a real-world high-hazard hazard trap: <b>HER2-Targeted Antibody-Drug Conjugate (ADC) Induced Cardiotoxicity</b>.
+<br><br>
+Let each patient profile <i>i</i> be a multi-dimensional clinical vector. The latent true personalized treatment decision probability—specifically, the probability that full-dose ADC will cause <b>Fatal Congestive Heart Failure (CHF)</b>—is governed by the clinically-anchored structural logistic equation:
 <br><br>
 <center style="font-family:monospace; font-size:1.1rem; background-color:#EFF6FF; padding:1rem; border-radius:5px;">
-<b>log( P(Y<sub>i</sub> = 1 | beta) / [1 - P(Y<sub>i</sub> = 1 | beta)] ) = θ<sub>0</sub> + θ<sub>1</sub>·X<sub>1i</sub> + θ<sub>2</sub>·X<sub>2i</sub> + θ<sub>3</sub>·X<sub>3i</sub> - f(beta)·X<sub>3i</sub> + ε<sub>i</sub></b>
+<b>log( P(Toxicity<sub>i</sub> = 1 | beta) / [1 - P(Toxicity<sub>i</sub> = 1 | beta)] ) = θ<sub>0</sub> - θ<sub>1</sub>·LVEF<sub>baseline</sub> + θ<sub>2</sub>·Anthracycline_Exposure + f(beta) + ε<sub>i</sub></b>
 </center>
 <br>
-Where:<br>
-• <b>X<sub>1i</sub></b> represents the HER2 Expression Status (Binary: 0 or 1).<br>
-• <b>X<sub>2i</sub></b> represents the germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status (Binary: 0 or 1).<br>
-• <b>X<sub>3i</sub></b> represents the standardized Left Ventricular Ejection Fraction (LVEF %) baseline value.<br>
-• <b>ε<sub>i</sub> ~ N(0, σ²)</b> represents unmeasured stochastic clinical variation noise.<br>
-• <b>f(beta)</b> represents the operationalized organ dysfunction function mapping patient physiological frailty along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
+<b>Medical Variable Mapping & Traceability Matrix:</b><br>
+• <b>LVEF<sub>baseline</sub> (X<sub>1</sub>):</b> Left Ventricular Ejection Fraction (%). The critical physiological surrogate endpoint for cardiac safety boundaries.<br>
+• <b>Anthracycline_Exposure (X<sub>2</sub>):</b> Binary indicator of prior cardiotoxic chemotherapy exposure, establishing a multi-causal clinical risk vector.<br>
+• <b>f(beta) — Organ Dysfunction & Guideline Mismatch Index:</b> Dynamically shifts the baseline probability of treatment-induced toxicity. At beta = 100%, the patient represents an ultra-frail profile where standard guideline enforcement ("always prescribe to clear tumors") directly causes a catastrophic <b>Safety Collapse (Fatal Cardiomyopathy)</b>.
 <br><br>
-<b>Clinical Derivative Constraint (Causal Invariance):</b><br>
-Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This partial derivative constraint guarantees that the patient's objective, underlying disease severity and physiological drug-toxicity threshold remain completely unchanged regardless of the EHR data fragmentation level (alpha). The biological truth remains invariant across the presentation layer.
+<b>The Primary Clinical Endpoint Space:</b><br>
+Rather than evaluating an abstract surrogate pattern, the audited model's output is measured via <b>Clinical Decision Agreement (CDA)</b>: Does the model's recommendation avoid a fatal toxicity endpoint while maintaining therapeutic efficacy, consistent with an expert multidisciplinary tumor board?
 </div>
 """, unsafe_allow_html=True)
 
-    # UPDATED SECTION: MATHEMATICAL INTERACTION MECHANISM COMPLETELY EXPLAINING PHI
-    st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism between alpha and beta</div>", unsafe_allow_html=True)
+    # 🧬 MATHEMATICAL INTERACTION MECHANISM COMPLETELY EXPLAINING PHI
+    st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism & The Resilient Floor (Φ)</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='box'>
-While the objective patient truth (DGP) remains unperturbed by prompt formatting, the <b>audited model's internal recommendation surface</b> degrades under the combined stress of data fragmentation and clinical complexity. To map how information loss (alpha) and patient frailty (beta) interact within the model's neural layers, the joint expected behavior is defined by the structural interaction equation:
+Under the joint stress of data missingness ($\alpha$) and patient frailty ($\beta$), the model's internal recommendation surface is evaluated via the following structural interaction model:
 <br><br>
 <center style="font-family:monospace; font-size:1.1rem; background-color:#FFF5F5; padding:1rem; border-radius:5px; border-left:4px solid #EF4444;">
-<b>Expected Model CRC(alpha, beta) = Baseline_Truth(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
+<b>Expected Model Agreement(alpha, beta) = Baseline_Safety(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
 </center>
 <br>
-<b>Mathematical Component and Parameter Deconstruction:</b><br><br>
-• <b>Baseline_Truth(beta):</b> The biological safety bound determined by the true patient-level cohort logic. As patient organ dysfunction (beta) reaches critical thresholds, the ceiling of clinical safety margin shrinks independent of text presentation.<br><br>
+<b>Deconstruction of Parameters for Medical Reviewers:</b><br><br>
 • <b>Φ (Phi) — The Foundational Resilient Floor (0 ≤ Φ ≤ 1):</b><br>
-&nbsp;&nbsp;<b>- Definition:</b> Φ represents the model's <i>intrinsic semantic resilience asset</i>. It is a normalization weight isolating the proportion of logical invariance that remains fully preserved even under absolute data obliteration (when alpha = 100%).<br>
-&nbsp;&nbsp;<b>- Mathematical Purpose:</b> It divides the model's response surface into an un-degradable hard knowledge anchor (Φ) and a degradable soft semantic anchor (1 - Φ). If Φ = 0.4, it guarantees that 40% of the model's baseline reasoning remains intact via structural context token co-variances even if explicit text definitions are missing.<br>
-&nbsp;&nbsp;<b>- Clinical Rationale:</b> This measures if an AI can infer patient-level high-risk profiles from remaining secondary clinical signs (e.g., patient age, related diagnostic comorbidities) when primary labels are lost.<br><br>
-• <b>Decay(alpha, beta) — The Boundary Trajectory Driver:</b> Mapped as a non-linear sigmoidal loss function <code>1 / (1 + exp(k · (alpha - alpha*)))</code>, where the model breakdown threshold (alpha*) and deterioration slope (k) are directly pulled by patient frailty:<br>
-&nbsp;&nbsp;<b>- alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b> (The alignment stress penalty; measures the leftward threshold drift under frailty)<br>
-&nbsp;&nbsp;<b>- k(beta) = k<sub>baseline</sub> + λ · beta</b> (The logic collapse acceleration rate)<br><br>
-<b>Clinical System Dynamics Summary:</b><br>
-When a patient is physiological robust (beta = 0), the degradation impact of missing charts is safely contained by the framework. However, when complex multi-organ frailty is introduced (beta = 100), the coupling parameters (γ and λ) are maximized, forcing a sharp leftward crash in the reversal point alpha*. <b>This proves that complex, borderline oncology clinical cases compound with fragmented EHR data to exponentially accelerate foundation model logic failure.</b>
+&nbsp;&nbsp;<b>- Clinical Definition:</b> The model's <b>Implicit Clinical Inference Asset</b>. It quantifies the proportion of safe clinical decisions the AI can maintain when explicit cardiac parameters are completely lost (alpha = 100%).<br>
+&nbsp;&nbsp;<b>- Pathophysiological Rationale:</b> If the explicit LVEF value is stripped due to unstructured EHR referral note fragmentation, a model with a high Φ can successfully infer the underlying cardiac risk by processing secondary clinical co-variates (e.g., age, history of ischemic heart disease, baseline cardiovascular medication density). It represents <i>contextual clinical intuition</i> over rigid token matching.<br><br>
+• <b>Decay(alpha, beta) — The Compounding Risk Driver:</b> Modeled via a non-linear sigmoidal loss curve where the <b>Clinical Safety Collapse Threshold (alpha*)</b> is aggressively modified by patient frailty:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <b>alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b><br>
+<br>
+<b>Clinical Conclusion for Regulatory Auditing:</b><br>
+When a patient has robust cardiorespiratory reserves (beta = 0%), the AI's logic is highly forgiving of missing health records. However, when the patient is borderline-frail (beta = 100%), the threshold alpha* shifts sharply leftward. <b>Missing data compounds with clinical frailty to precipitate early, non-linear logic failure inside the model, turning a documentation error into an immediate patient safety hazard.</b>
 </div>
 """, unsafe_allow_html=True)
-
-    st.markdown("<div class='h'>💡 Clinical Rationale: Why Do We Use a Log Formula?</div>", unsafe_allow_html=True)
-    st.markdown("""
-<div class='logic-box'>
-<b>Why use Logarithms in Oncology Patient Generation? </b><br>
-In pure mathematics, the raw clinical indicators of a patient (such as an LVEF of 30% or 60%) are continuous numbers that span linearly. However, in human physiology and oncology guidelines, <b>clinical risk does not scale linearly; it operates on a threshold switch</b>. 
-<br><br>
-For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication due to cardiotoxicity bounds.
-<br><br>
-By applying the <b>log-odds equation (Logit transformation)</b> on the left side of our formula, we map these linear clinical input measurements (Age, HER2 status, LVEF) into a compressed, sigmoidal S-curve bounded strictly between <b>0% and 100% probability</b>. This mathematical setup perfectly mimics the decision-making process of a real-world multidisciplinary tumor board—transforming continuous biological variables into a concrete, binary clinical action (To Prescribe vs. Not to Prescribe).
-</div>
-""", unsafe_allow_html=True)
-
-    st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
-    st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
-
-    baseline_data = {
-        "Clinical Variable & Covariates": [
-            "Age at Diagnosis (Years)", 
-            "Left Ventricular Ejection Fraction (LVEF %)", 
-            "HER2 Status (Overexpression Positive)", 
-            "gBRCA Status (Pathogenic Mutant)", 
-            "Breast Density Type (ACR Category C/D)", 
-            "Menopausal Status (Post-menopausal)",
-            "Historical Biopsy Count (Baseline)",
-            "Anatomical Tumor Quadrant (Upper Outer)"
-        ],
-        "Statistical Metric / Distribution Type": [
-            "Continuous (Gaussian / Normal)", 
-            "Continuous (Bounded Gaussian)", 
-            "Categorical (Binomial)", 
-            "Categorical (Binomial)", 
-            "Categorical (Multinomial)", 
-            "Categorical (Binomial)",
-            "Discrete (Poisson / Integer)",
-            "Categorical (Multinomial)"
-        ],
-        "Expected Value / Proportion Bounds": [
-            "Mean: 58.0 ± 12.0 (Range: 28 – 88)", 
-            "Mean: 55.0% ± 8.0% (Range: 20% – 75%)", 
-            "20.0% Positive (n = 400 / 2,000)", 
-            "5.0% Mutant (n = 100 / 2,000)", 
-            "45.5% High Density (n = 910 / 2,000)", 
-            "65.0% Post-menopausal (n = 1,300 / 2,000)",
-            "Median: 2 (Interquartile Range: 1 – 3)",
-            "42.0% Upper Outer (n = 840 / 2,000)"
-        ]
-    }
-    st.dataframe(pd.DataFrame(baseline_data), use_container_width=True)
-
 # ======================================================
 # SECTION 4: EXPECTED OUTCOMES & VISUALIZATIONS
 # ======================================================

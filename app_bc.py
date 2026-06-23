@@ -124,14 +124,10 @@ if page == "1. Study Objectives":
 <div class='objective-box'>
 This research proposal establishes the <b>Clinical Recommendation Stability Audit Framework (CRSAF)</b>, a novel regulatory science paradigm evaluating oncology foundation models under real-world clinical distribution shifts. Rather than relying on simplistic, static accuracy leaderboards, this framework tests model safety when faced with the inherent imperfections of clinical data and patient physiological variations.
 <br><br>
-Led by a multi-disciplinary hematology-oncology investigator team, this project bridges the gap between pure Artificial Intelligence (AI) safety benchmarking and clinical deployment reality, pursuing three core objectives:
-<br><br>
 <b>1. Evaluate Model Resilience Under Fragmented EHR Data:</b><br>
-To systematically measure how Large Language Models (LLMs) behave when critical diagnostic parameters are progressively lost within unstructured, fragmented Electronic Health Record (EHR) referral workflows.
-<br><br>
+To systematically measure how Large Language Models (LLMs) behave when critical diagnostic parameters are progressively lost within unstructured, fragmented Electronic Health Record (EHR) referral workflows.<br><br>
 <b>2. Map Decision Dynamics Under High Toxicity and Guideline Mismatch:</b><br>
-To profile model decision-making when forced into high-stress distribution shifts where canonical textbook guidelines conflict with real-world patient frailty and organ dysfunction profiles, requiring customized regimen modifications.
-<br><br>
+To profile model decision-making when forced into high-stress distribution shifts where canonical textbook guidelines conflict with real-world patient frailty and organ dysfunction profiles, requiring customized regimen modifications.<br><br>
 <b>3. Standardize Safety Boundaries for Software as a Medical Device (SaMD):</b><br>
 To pioneer an objective mathematical auditing criterion (alpha*) that defines the exact stress boundary where a model's clinical decision safety systematically collapses, providing robust metrics for regulatory pre-market reviews before deploying AI into multidisciplinary tumor boards.
 </div>
@@ -145,15 +141,15 @@ elif page == "2. Methodology Framework":
     st.markdown("""
 <div class='box'>
 <b>1. Clinical Sandbox Selection: Advanced Breast Cancer Paradigm</b><br>
-To satisfy clinical peer-review standards, this framework is strictly anchored within the clinical workflow of advanced precision breast cancer. The model evaluation uses the clinical pathways governing Human Epidermal Growth Factor Receptor 2 (HER2)-targeted Antibody-Drug Conjugates (ADCs, e.g., Trastuzumab Deruxtecan [T-DXd]) and Poly (ADP-ribose) Polymerase (PARP) inhibitors. 
+The model evaluation uses the clinical pathways governing Human Epidermal Growth Factor Receptor 2 (HER2)-targeted Antibody-Drug Conjugates (ADCs, e.g., Trastuzumab Deruxtecan [T-DXd]) and Poly (ADP-ribose) Polymerase (PARP) inhibitors. <br>
 These high-potency therapies carry strict, non-linear safety counter-indications—specifically, a cardiotoxicity red line where a drop in Left Ventricular Ejection Fraction (LVEF) below 45% mandates immediate treatment cessation. This real-world medical hazard trap serves as our clinical testing ground.
 <br><br>
 <b>2. Factor A Operationalization: The Real-World EHR Information Loss Continuum (alpha Gradient)</b><br>
-To translate pure computational "semantic ablation" into an authentic medical workflow, <b>Factor A (alpha) represents the Electronic Health Record (EHR) Fragmented Missingness Mechanism</b>. 
+To translate pure computational "semantic ablation" into an authentic medical workflow, <b>Factor A (alpha) represents the Electronic Health Record (EHR) Fragmented Missingness Mechanism</b>. <br>
 In real-world oncology cross-center referrals, clinician notes and laboratory reports are frequently incomplete. As alpha increases from 0% to 100%, the prompt generation engine progressively simulates information loss—ranging from the complete clinical narrative to the total stripping of explicit diagnostic terminology (e.g., missing flow cytometry or NGS markers), forcing the model to infer underlying risk patterns from remaining noisy covariates.
 <br><br>
 <b>3. Factor B Operationalization: Organ Dysfunction & Real-World Guideline Mismatch (beta Gradient)</b><br>
-To ground abstract "guideline distortion" into real-world hematology-oncology practice variation, <b>Factor B (beta) represents the Patient Organ Dysfunction Severity & Frailty Index</b>. Bounded between 0% and 100%, beta controls the degree of deviation between textbook guidelines and the optimal clinical action. 
+To ground abstract "guideline distortion" into real-world hematology-oncology practice variation, <b>Factor B (beta) represents the Patient Organ Dysfunction Severity & Frailty Index</b>. Bounded between 0% and 100%, beta controls the degree of deviation between textbook guidelines and the optimal clinical action. <br>
 At beta = 0%, the patient is an ideal clinical trial candidate, and standard guidelines perfectly apply. At beta = 100%, the patient presents with profound physiological dysfunction (e.g., severe renal impairment or severe cardiac compromise with LVEF under 35%). In this zone, canonical guidelines ("always give full-dose ADC") mismatch reality; the true optimal action requires aggressive dose reduction or regimen switching to avoid fatal toxicity.
 <br><br>
 <b>4. Primary Endpoint: Clinical Recommendation Concordance (CRC)</b><br>
@@ -191,10 +187,34 @@ Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This partial derivativ
 </div>
 """, unsafe_allow_html=True)
 
+    # NEW INCORPORATION: THE MATHEMATICAL INTERACTION MECHANISM OF ALPHA AND BETA
+    st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism between alpha and beta</div>", unsafe_allow_html=True)
+    st.markdown("""
+<div class='box'>
+While the patient's biological truth (DGP) remains untouched by prompt modifications, the <b>audited model's internal decision network</b> is jointly stressed by both factors. To quantify how information loss (alpha) and patient-level organ fragility (beta) interact within the model's black box, we model the expected behavioral degradation curve as a multi-variable surface function:
+<br><br>
+<center style="font-family:monospace; font-size:1.1rem; background-color:#FFF5F5; padding:1rem; border-radius:5px; border-left:4px solid #EF4444;">
+<b>Expected Model CRC(alpha, beta) = Baseline_Truth(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
+</center>
+<br>
+<b>Deconstruction of the Systemic Interaction Variables:</b><br><br>
+1. <b>Baseline_Truth(beta):</b> Driven entirely by the underlying biological condition. As patient frailty (beta) spikes, the margin for safety thins, lowering the baseline consensus ceiling.
+<br><br>
+2. <b>The Interaction Term - Decay(alpha, beta):</b> Bounded as a non-linear function, modeled as <code>1 / (1 + exp(k · (alpha - alpha*)))</code>. Here, the slope (k) and the decision breakdown threshold (alpha*) are directly pulled by beta:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <b>alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;• <b>k(beta) = k<sub>baseline</sub> + λ · beta</b>
+<br><br>
+<b>Clinical Interpretation of the Interaction Mechanics:</b><br>
+• <b>When beta = 0% (Low-Risk Candiate):</b> The alignment penalty coefficient (γ) remains un-triggered. The decision boundary alpha* stays high, and the slope is gentle. This represents an environment where the model can safely handle extreme data missingness (alpha) because the patient has strong organ reserves.<br>
+• <b>When beta = 100% (High-Risk Mismatch Zone):</b> The interaction parameters (γ and λ) are maximized. The structural threshold alpha* shifts sharply to the left, while the degradation slope (k) becomes drastically steeper. In plain medical terms, <b>severe patient organ frailty compounding with missing health records creates an informational emergency</b>, precipitating early and severe non-linear logic collapses inside the foundation model.
+</div>
+""", unsafe_allow_html=True)
+
     st.markdown("<div class='h'>💡 Clinical Rationale: Why Do We Use a Log Formula?</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='logic-box'>
-<b>Why use Logarithms in Oncology Patient Generation? (An Intuitive Explanation for Clinicians)</b><br>
+<b>Why use Logarithms in Oncology Patient Generation? </b><br>
 In pure mathematics, the raw clinical indicators of a patient (such as an LVEF of 30% or 60%) are continuous numbers that span linearly. However, in human physiology and oncology guidelines, <b>clinical risk does not scale linearly; it operates on a threshold switch</b>. 
 <br><br>
 For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication due to cardiotoxicity bounds.
@@ -206,7 +226,6 @@ By applying the <b>log-odds equation (Logit transformation)</b> on the left side
     st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
     st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
 
-    # High-fidelity baseline demographic statistics data table
     baseline_data = {
         "Clinical Variable & Covariates": [
             "Age at Diagnosis (Years)", 

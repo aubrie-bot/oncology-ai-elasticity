@@ -20,7 +20,6 @@ st.markdown("""
 .box {background:#F8FAFC;padding:1rem;border-radius:10px;border-left:4px solid #3B82F6;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
 .objective-box {background:#F0FDF4;padding:1.25rem;border-radius:10px;border-left:4px solid #22C55E;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
 .logic-box {background:#FFFBEB;padding:1.25rem;border-radius:10px;border-left:4px solid #D97706;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
-.cursor-box {background:#EEF2F6;padding:1.25rem;border-radius:10px;border-left:4px solid #64748B;margin:1rem 0;font-family:monospace;font-size:0.9rem;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -111,7 +110,7 @@ page = st.sidebar.radio(
     [
         "1. Study Objectives",
         "2. Methodology Framework",
-        "3. Sample Generation & Cursor Guide",
+        "3. Mathematical DGP & Descriptive Statistics",
         "4. Expected Outcomes & Visualizations"
     ]
 )
@@ -124,6 +123,8 @@ if page == "1. Study Objectives":
     st.markdown("""
 <div class='objective-box'>
 This research proposal aims to establish a falsifiable, adversarial regulatory science audit framework for oncology foundation models. Current evaluations of Large Language Models (LLMs) in clinical decision support are predominantly limited to static accuracy leaderboards, failing to capture behavioral vulnerabilities under distribution shifts. 
+<br><br>
+Led by a multi-disciplinary hematology-oncology investigator team, this project utilizes advanced precision breast cancer therapeutic pathways as a high-stress clinical sandbox to achieve three core objectives:
 <br><br>
 <b>1. Quantify Semantic Rigidity and Textual Anchor Dependency:</b><br>
 To measure whether foundation model decisions are rigidly tethered to explicit medical terminology ("textual anchors") or possess genuine causal reasoning capabilities based on underlying clinical patient profile covariance.
@@ -141,7 +142,6 @@ To develop objective, non-ranking behavioral indices that can serve as reliable 
 # ======================================================
 elif page == "2. Methodology Framework":
     st.markdown("<div class='h'>Methodology Framework</div>", unsafe_allow_html=True)
-
     st.markdown("""
 <div class='box'>
 <b>1. Clinical Sandbox Selection and Causal Grounding</b><br>
@@ -160,62 +160,73 @@ To eliminate stochastic sampling noise, all model API (Application Programming I
 """, unsafe_allow_html=True)
 
 # ======================================================
-# SECTION 3: SAMPLE GENERATION MECHANISM & CURSOR PROMPT GUIDE
+# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS (全新重構版)
 # ======================================================
-elif page == "3. Sample Generation & Cursor Guide":
-    st.markdown("<div class='h'>Sample Generation Mechanism</div>", unsafe_allow_html=True)
-
+elif page == "3. Mathematical DGP & Descriptive Statistics":
+    st.markdown("<div class='h'>Mathematical Formulation of the Data-Generating Process (DGP)</div>", unsafe_allow_html=True)
+    
     st.markdown("""
 <div class='box'>
-To ensure strict falsifiability, the generation protocol for the synthetic clinical cohort and the subsequent 30-cell adversarial evaluation matrix is operationalized through three sequential steps:
+To establish strict, mathematically reproducible causal logic, the synthetic patient cohort generation relies on an explicit probabilistic function. 
+Let each patient profile $i$ (where $i = 1, \dots, 2000$) be represented as a multi-dimensional vector. The latent true clinical recommendation probability, $P(Y_i = 1 \mid \beta)$, is governed by the structural logistic equation:
 <br><br>
-<b>Step 1: Constructing the High-Dimensional Synthetic Breast Cancer Cohort (N = 2000)</b><br>
-A structural matrix representing 2,000 synthetic patient profiles with advanced breast cancer will be programmatically generated via Python. Each patient profile consists of eight multi-dimensional clinical vectors:<br>
-• Causal Decision Variables: Age, HER2 Expression Status, germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status, and Left Ventricular Ejection Fraction (LVEF %).<br>
-• Nuisance Covariates (Noise): Breast Density, Anatomical Tumor Quadrant, Historical Biopsy Count, and Menopausal Status.
+<b>$$\log \left( \frac{P(Y_i = 1 \mid \beta)}{1 - P(Y_i = 1 \mid \beta)} \right) = \theta_0 + \theta_1 \cdot X_{1i} + \theta_2 \cdot X_{2i} + \theta_3 \cdot X_{3i} - f(\beta) \cdot X_{3i} + \epsilon_i$$</b>
 <br><br>
-<b>Step 2: Mathematical Injection of Guideline Distortion (Factor B Gradient: beta)</b><br>
-The cohort is subjected to a five-tier guideline distortion gradient where beta belongs to the set {0%, 25%, 50%, 75%, 100%}.<br>
-• At beta = 0%, the DGP perfectly aligns with canonical guidelines (e.g., prescribing ADCs to eligible HER2+ patients with normal LVEF).<br>
-• At beta = 100%, a latent stochastic function systematically inverts the target labels (e.g., assigning highly dangerous therapeutic recommendations to patients with compromised cardiac function, such as LVEF less than or equal to 30%). This creates an adversarial conflict against the model's parametric historical training weights. The underlying truth remains causally invariant across the text presentation layer.
+Where:<br>
+• $X_{1i}$ represents the HER2 Expression Status (Binary: 0 or 1).<br>
+• $X_{2i}$ represents the germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status (Binary: 0 or 1).<br>
+• $X_{3i}$ represents the standardized Left Ventricular Ejection Fraction (LVEF %) baseline value.<br>
+• $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$ represents unmeasured stochastic clinical variation noise.<br>
+• $f(\beta)$ represents the operationalized guideline distortion function mapping the perturbation intensity along the $\beta \in \{0\%, 25\%, 50\%, 75\%, 100\%\}$ matrix. 
 <br><br>
-<b>Step 3: Execution of Progressive Semantic Ablation (Factor A Continuum: alpha)</b><br>
-Prior to model processing, the 2,000 text prompts are modified across a six-tier semantic ablation gradient where alpha belongs to the set {0%, 20%, 40%, 60%, 80%, 100%}.<br>
-• At alpha = 0%, standard medical terms (e.g., HER2 Positive) are fully preserved.<br>
-• At alpha = 100%, explicit terminology is completely removed and anonymized into abstract feature labels (e.g., Feature_1 through Feature_8), forcing the core neural networks to perform statistical inference based purely on numerical covariances without textual anchors.
+Crucially, <b>$\partial P(Y_i = 1) / \partial \alpha = 0$</b>. This mathematical constraint ensures that semantic ablation ($\alpha$) alters only the text presentation layer of the prompt and preserves the statistical covariance of the underlying empirical clinical truth.
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("<div class='h'>🤖 Cursor AI Development Prompt Guide</div>", unsafe_allow_html=True)
-    st.caption("Copy the formal system instruction block below, open your Cursor Composer or Chat Panel (Ctrl+I or Ctrl+L), and paste it directly to guide the automatic cohort generation script development.")
+    st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
+    st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
 
-    st.markdown("""
-<div class='cursor-box'>
-<b>[SYSTEM PROMPT FOR CURSOR SAMPLE GENERATOR]</b><br>
-Act as an expert Python biostatistician and research software engineer. Write a fully modular, reproducible pipeline script named <code>generate_cohort.py</code> that implements the 3-step Sample Generation Mechanism specified in our research proposal.
-<br><br>
-<b>Requirements:</b><br>
-1. Use <code>numpy.random.default_rng(seed=42)</code> to generate a baseline dataframe of N = 2000 unique breast cancer patient profiles.<br>
-2. Model the 4 Causal Decision Variables using realistic demographic distributions:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;- Age: Normal distribution (mean=58, std=12, clipped between 28 and 88).<br>
-&nbsp;&nbsp;&nbsp;&nbsp;- HER2_Status: Categorical (Positive: 20%, Negative: 80%).<br>
-&nbsp;&nbsp;&nbsp;&nbsp;- gBRCA_Status: Categorical (Mutant: 5%, Wild-Type: 95%).<br>
-&nbsp;&nbsp;&nbsp;&nbsp;- LVEF_Percentage: Normal distribution (mean=55, std=8, clipped between 20 and 75).<br>
-3. Include the 4 Nuisance Covariates (Breast_Density, Tumor_Quadrant, Biopsy_Count, Menopausal_Status) as background clinical noise.<br>
-4. Implement the Factor B (beta) Guideline Distortion function. When beta = 0, patients with HER2+ and LVEF >= 45% must receive an ADC prescription label (Target = 1). When beta = 100, invert this logic stochastically so compromised patients (LVEF <= 30%) are assigned highly dangerous therapeutic recommendations (Target = 1). Ensure beta levels (0, 25, 50, 75, 100) are cleanly parameterized.<br>
-5. Implement the Factor A (alpha) Semantic Ablation layer. Write a formatting engine that outputs final textual prompts based on the alpha gradient (0, 20, 40, 60, 80, 100). At alpha = 0, columns are labeled explicitly (e.g., 'HER2 Status: Positive'). At alpha = 100, headers and values are masked into unindexed abstractions (e.g., 'Feature_2: Value_A').<br>
-6. Save the generated evaluation tensor as a tidy structured <code>dataset_proposal_matrix.csv</code>.<br>
-<br>
-<i>Verify that all code adheres to rigid clinical data-generating processing logic and includes assertion tests for shape, range limits, and deterministic seed behavior.</i>
-</div>
-""", unsafe_allow_html=True)
+    # Building a publication-grade Baseline Demographic Table (Table 1)
+    baseline_data = {
+        "Clinical Variable & Covariates": [
+            "Age at Diagnosis (Years)", 
+            "Left Ventricular Ejection Fraction (LVEF %)", 
+            "HER2 Status (Overexpression Positive)", 
+            "gBRCA Status (Pathogenic Mutant)", 
+            "Breast Density Type (ACR Category C/D)", 
+            "Menopausal Status (Post-menopausal)",
+            "Historical Biopsy Count (Baseline)",
+            "Anatomical Tumor Quadrant (Upper Outer)"
+        ],
+        "Statistical Metric / Distribution Type": [
+            "Continuous (Gaussian / Normal)", 
+            "Continuous (Bounded Gaussian)", 
+            "Categorical (Binomial)", 
+            "Categorical (Binomial)", 
+            "Categorical (Multinomial)", 
+            "Categorical (Binomial)",
+            "Discrete (Poisson / Integer)",
+            "Categorical (Multinomial)"
+        ],
+        "Expected Value / Proportion Bounds": [
+            "Mean: 58.0 ± 12.0 (Range: 28 – 88)", 
+            "Mean: 55.0% ± 8.0% (Range: 20% – 75%)", 
+            "20.0% Positive (n = 400 / 2,000)", 
+            "5.0% Mutant (n = 100 / 2,000)", 
+            "45.5% High Density (n = 910 / 2,000)", 
+            "65.0% Post-menopausal (n = 1,300 / 2,000)",
+            "Median: 2 (Interquartile Range: 1 – 3)",
+            "42.0% Upper Outer (n = 840 / 2,000)"
+        ]
+    }
+    st.dataframe(pd.DataFrame(baseline_data), use_container_width=True)
 
 # ======================================================
 # SECTION 4: EXPECTED OUTCOMES & VISUALIZATIONS
 # ======================================================
 else:
     st.markdown("<div class='h'>Expected Research Outcomes & Visualizations</div>", unsafe_allow_html=True)
-
+    
     st.markdown("""
 <div class='logic-box'>
 <b>💡 Theoretical Rationales for Audited Model Profiles</b><br>
@@ -229,19 +240,22 @@ The hypothesized distinct trajectories injected into this proposal are derived f
 </div>
 """, unsafe_allow_html=True)
 
+    # --------------------------------------------------
+    # Expected Figure 1: Stratified Dose-Response Curves
+    # --------------------------------------------------
     st.markdown("### Expected Figure 1: Stratified Expected CRC Trajectories at Extreme Boundaries")
     st.caption("Figure 1: Hypothesized stress-response trajectories for the audited model profiles comparing the unperturbed baseline control zone (Green, beta = 0%) against the high adversarial stress zone (Red, beta = 100%).")
 
     selected_m = st.segmented_control("Select Audited Model Profile to Preview Expected Trajectory", models, default=models[0])
     sub_m = df_proposal[df_proposal["model"] == selected_m]
-
+    
     df_b0 = sub_m[sub_m["beta"] == 0]
     df_b100 = sub_m[sub_m["beta"] == 100]
 
     fig_exp = go.Figure()
     fig_exp.add_trace(go.Scatter(x=df_b0["alpha"], y=df_b0["crc"], mode="lines+markers", name="Expected Baseline Control (beta = 0%)", line=dict(color="#22C55E", width=3)))
     fig_exp.add_trace(go.Scatter(x=df_b100["alpha"], y=df_b100["crc"], mode="lines+markers", name="Expected High Stress Zone (beta = 100%)", line=dict(color="#EF553B", width=3)))
-
+    
     fig_exp.update_layout(
         xaxis_title="Semantic Ablation Gradient (alpha%)",
         yaxis_title="Expected Clinical Recommendation Concordance (CRC)",
@@ -250,6 +264,9 @@ The hypothesized distinct trajectories injected into this proposal are derived f
     )
     st.plotly_chart(fig_exp, use_container_width=True)
 
+    # --------------------------------------------------
+    # Expected Figure 2: CDRT Inflection Point Comparison
+    # --------------------------------------------------
     st.markdown("### Expected Figure 2: Expected Clinical Decision Reversal Threshold (CDRT) Comparison")
     st.caption("Figure 2: Comparative matrix of estimated CDRT values calculated from the mathematical inflection points (where the second derivative equals zero) of the fitted logistic decay models.")
 
@@ -264,8 +281,11 @@ The hypothesized distinct trajectories injected into this proposal are derived f
         use_container_width=True
     )
 
+    # --------------------------------------------------
+    # Supplementary Notes & Reviewer Defense
+    # --------------------------------------------------
     st.markdown("<div class='h'>Supplementary Notes & Interpretation Criteria</div>", unsafe_allow_html=True)
-
+    
     st.markdown("""
 <div class='box'>
 <b>Supplementary Note S1: Verification of Invariance Under Baseline Control (Green Line Trajectory)</b><br>

@@ -179,7 +179,7 @@ Where:<br>
 • <b>ε<sub>i</sub> ~ N(0, σ²)</b> represents unmeasured stochastic clinical variation noise.<br>
 • <b>f(beta)</b> represents the operationalized guideline distortion function mapping the perturbation intensity along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
 <br><br>
-<b>Clinical Derivative Constraint (Physician-Friendly Translation):</b><br>
+<b>Clinical Derivative Constraint:</b><br>
 Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. In plain medical terms, this partial derivative guarantees that the patient's underlying disease severity and the true clinical indication remain completely unchanged regardless of how text prompts are masked or anonymized. The objective clinical reality remains independent of vocabulary presentation.
 </div>
 """, unsafe_allow_html=True)

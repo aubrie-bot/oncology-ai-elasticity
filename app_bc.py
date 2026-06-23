@@ -160,33 +160,36 @@ To eliminate stochastic sampling noise, all model API (Application Programming I
 """, unsafe_allow_html=True)
 
 # ======================================================
-# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS (全新重構版)
+# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS
 # ======================================================
 elif page == "3. Mathematical DGP & Descriptive Statistics":
     st.markdown("<div class='h'>Mathematical Formulation of the Data-Generating Process (DGP)</div>", unsafe_allow_html=True)
     
-    st.markdown("""
+    # Fully sanitized using programmatic raw strings and standard web-safe unicode characters
+    st.markdown(r"""
 <div class='box'>
 To establish strict, mathematically reproducible causal logic, the synthetic patient cohort generation relies on an explicit probabilistic function. 
-Let each patient profile $i$ (where $i = 1, \dots, 2000$) be represented as a multi-dimensional vector. The latent true clinical recommendation probability, $P(Y_i = 1 \mid \beta)$, is governed by the structural logistic equation:
+Let each patient profile <i>i</i> (where <i>i</i> = 1, ..., 2000) be represented as a multi-dimensional vector. The latent true clinical recommendation probability, P(Y<sub>i</sub> = 1 | beta), is governed by the structural logistic equation:
 <br><br>
-<b>$$\log \left( \frac{P(Y_i = 1 \mid \beta)}{1 - P(Y_i = 1 \mid \beta)} \right) = \theta_0 + \theta_1 \cdot X_{1i} + \theta_2 \cdot X_{2i} + \theta_3 \cdot X_{3i} - f(\beta) \cdot X_{3i} + \epsilon_i$$</b>
-<br><br>
+<center style="font-family:monospace; font-size:1.1rem; background-color:#EFF6FF; padding:1rem; border-radius:5px;">
+<b>log( P(Y<sub>i</sub>=1 | beta) / [1 - P(Y<sub>i</sub>=1 | beta)] ) = θ<sub>0</sub> + θ<sub>1</sub>·X<sub>1i</sub> + θ<sub>2</sub>·X<sub>2i</sub> + θ<sub>3</sub>·X<sub>3i</sub> - f(beta)·X<sub>3i</sub> + ε<sub>i</sub></b>
+</center>
+<br>
 Where:<br>
-• $X_{1i}$ represents the HER2 Expression Status (Binary: 0 or 1).<br>
-• $X_{2i}$ represents the germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status (Binary: 0 or 1).<br>
-• $X_{3i}$ represents the standardized Left Ventricular Ejection Fraction (LVEF %) baseline value.<br>
-• $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$ represents unmeasured stochastic clinical variation noise.<br>
-• $f(\beta)$ represents the operationalized guideline distortion function mapping the perturbation intensity along the $\beta \in \{0\%, 25\%, 50\%, 75\%, 100\%\}$ matrix. 
+• <b>X<sub>1i</sub></b> represents the HER2 Expression Status (Binary: 0 or 1).<br>
+• <b>X<sub>2i</sub></b> represents the germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status (Binary: 0 or 1).<br>
+• <b>X<sub>3i</sub></b> represents the standardized Left Ventricular Ejection Fraction (LVEF %) baseline value.<br>
+• <b>ε<sub>i</sub> ~ N(0, σ²)</b> represents unmeasured stochastic clinical variation noise.<br>
+• <b>f(beta)</b> represents the operationalized guideline distortion function mapping the perturbation intensity along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
 <br><br>
-Crucially, <b>$\partial P(Y_i = 1) / \partial \alpha = 0$</b>. This mathematical constraint ensures that semantic ablation ($\alpha$) alters only the text presentation layer of the prompt and preserves the statistical covariance of the underlying empirical clinical truth.
+Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This mathematical partial derivative constraint ensures that semantic ablation (alpha) alters only the text presentation layer of the prompt and preserves the statistical covariance of the underlying empirical clinical truth intact.
 </div>
 """, unsafe_allow_html=True)
 
     st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
     st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
 
-    # Building a publication-grade Baseline Demographic Table (Table 1)
+    # Maintained the exact high-fidelity dataframe for publication-grade baseline statistics
     baseline_data = {
         "Clinical Variable & Covariates": [
             "Age at Diagnosis (Years)", 
@@ -220,7 +223,6 @@ Crucially, <b>$\partial P(Y_i = 1) / \partial \alpha = 0$</b>. This mathematical
         ]
     }
     st.dataframe(pd.DataFrame(baseline_data), use_container_width=True)
-
 # ======================================================
 # SECTION 4: EXPECTED OUTCOMES & VISUALIZATIONS
 # ======================================================

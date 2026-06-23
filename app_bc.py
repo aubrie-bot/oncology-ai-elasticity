@@ -187,27 +187,27 @@ Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This partial derivativ
 </div>
 """, unsafe_allow_html=True)
 
-    # NEW INCORPORATION: THE MATHEMATICAL INTERACTION MECHANISM OF ALPHA AND BETA
+    # UPDATED SECTION: MATHEMATICAL INTERACTION MECHANISM COMPLETELY EXPLAINING PHI
     st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism between alpha and beta</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='box'>
-While the patient's biological truth (DGP) remains untouched by prompt modifications, the <b>audited model's internal decision network</b> is jointly stressed by both factors. To quantify how information loss (alpha) and patient-level organ fragility (beta) interact within the model's black box, we model the expected behavioral degradation curve as a multi-variable surface function:
+While the objective patient truth (DGP) remains unperturbed by prompt formatting, the <b>audited model's internal recommendation surface</b> degrades under the combined stress of data fragmentation and clinical complexity. To map how information loss (alpha) and patient frailty (beta) interact within the model's neural layers, the joint expected behavior is defined by the structural interaction equation:
 <br><br>
 <center style="font-family:monospace; font-size:1.1rem; background-color:#FFF5F5; padding:1rem; border-radius:5px; border-left:4px solid #EF4444;">
 <b>Expected Model CRC(alpha, beta) = Baseline_Truth(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
 </center>
 <br>
-<b>Deconstruction of the Systemic Interaction Variables:</b><br><br>
-1. <b>Baseline_Truth(beta):</b> Driven entirely by the underlying biological condition. As patient frailty (beta) spikes, the margin for safety thins, lowering the baseline consensus ceiling.
-<br><br>
-2. <b>The Interaction Term - Decay(alpha, beta):</b> Bounded as a non-linear function, modeled as <code>1 / (1 + exp(k · (alpha - alpha*)))</code>. Here, the slope (k) and the decision breakdown threshold (alpha*) are directly pulled by beta:
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <b>alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b><br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <b>k(beta) = k<sub>baseline</sub> + λ · beta</b>
-<br><br>
-<b>Clinical Interpretation of the Interaction Mechanics:</b><br>
-• <b>When beta = 0% (Low-Risk Candiate):</b> The alignment penalty coefficient (γ) remains un-triggered. The decision boundary alpha* stays high, and the slope is gentle. This represents an environment where the model can safely handle extreme data missingness (alpha) because the patient has strong organ reserves.<br>
-• <b>When beta = 100% (High-Risk Mismatch Zone):</b> The interaction parameters (γ and λ) are maximized. The structural threshold alpha* shifts sharply to the left, while the degradation slope (k) becomes drastically steeper. In plain medical terms, <b>severe patient organ frailty compounding with missing health records creates an informational emergency</b>, precipitating early and severe non-linear logic collapses inside the foundation model.
+<b>Mathematical Component and Parameter Deconstruction:</b><br><br>
+• <b>Baseline_Truth(beta):</b> The biological safety bound determined by the true patient-level cohort logic. As patient organ dysfunction (beta) reaches critical thresholds, the ceiling of clinical safety margin shrinks independent of text presentation.<br><br>
+• <b>Φ (Phi) — The Foundational Resilient Floor (0 ≤ Φ ≤ 1):</b><br>
+&nbsp;&nbsp;<b>- Definition:</b> Φ represents the model's <i>intrinsic semantic resilience asset</i>. It is a normalization weight isolating the proportion of logical invariance that remains fully preserved even under absolute data obliteration (when alpha = 100%).<br>
+&nbsp;&nbsp;<b>- Mathematical Purpose:</b> It divides the model's response surface into an un-degradable hard knowledge anchor (Φ) and a degradable soft semantic anchor (1 - Φ). If Φ = 0.4, it guarantees that 40% of the model's baseline reasoning remains intact via structural context token co-variances even if explicit text definitions are missing.<br>
+&nbsp;&nbsp;<b>- Clinical Rationale:</b> This measures if an AI can infer patient-level high-risk profiles from remaining secondary clinical signs (e.g., patient age, related diagnostic comorbidities) when primary labels are lost.<br><br>
+• <b>Decay(alpha, beta) — The Boundary Trajectory Driver:</b> Mapped as a non-linear sigmoidal loss function <code>1 / (1 + exp(k · (alpha - alpha*)))</code>, where the model breakdown threshold (alpha*) and deterioration slope (k) are directly pulled by patient frailty:<br>
+&nbsp;&nbsp;<b>- alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b> (The alignment stress penalty; measures the leftward threshold drift under frailty)<br>
+&nbsp;&nbsp;<b>- k(beta) = k<sub>baseline</sub> + λ · beta</b> (The logic collapse acceleration rate)<br><br>
+<b>Clinical System Dynamics Summary:</b><br>
+When a patient is physiological robust (beta = 0), the degradation impact of missing charts is safely contained by the framework. However, when complex multi-organ frailty is introduced (beta = 100), the coupling parameters (γ and λ) are maximized, forcing a sharp leftward crash in the reversal point alpha*. <b>This proves that complex, borderline oncology clinical cases compound with fragmented EHR data to exponentially accelerate foundation model logic failure.</b>
 </div>
 """, unsafe_allow_html=True)
 

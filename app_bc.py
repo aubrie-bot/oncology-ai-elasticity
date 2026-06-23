@@ -125,8 +125,6 @@ if page == "1. Study Objectives":
 <div class='objective-box'>
 This research proposal aims to establish a falsifiable, adversarial regulatory science audit framework for oncology foundation models. Current evaluations of Large Language Models (LLMs) in clinical decision support are predominantly limited to static accuracy leaderboards, failing to capture behavioral vulnerabilities under distribution shifts. 
 <br><br>
-Led by a multi-disciplinary hematology-oncology investigator team, this project utilizes advanced precision breast cancer therapeutic pathways as a high-stress clinical sandbox to achieve three core objectives:
-<br><br>
 <b>1. Quantify Semantic Rigidity and Textual Anchor Dependency:</b><br>
 To measure whether foundation model decisions are rigidly tethered to explicit medical terminology ("textual anchors") or possess genuine causal reasoning capabilities based on underlying clinical patient profile covariance.
 <br><br>

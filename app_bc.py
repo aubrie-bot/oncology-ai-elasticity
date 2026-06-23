@@ -161,7 +161,7 @@ The secondary endpoint is the Clinical Decision Reversal Threshold (CDRT), mathe
 """, unsafe_allow_html=True)
 
 # ======================================================
-# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS (完全體)
+# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS
 # ======================================================
 elif page == "3. Mathematical DGP & Descriptive Statistics":
     st.markdown("<div class='h'>Mathematical Formulation Anchored to Hematology-Oncology Endpoints</div>", unsafe_allow_html=True)
@@ -190,7 +190,7 @@ Rather than evaluating an abstract surrogate pattern, the audited model's output
     st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism & The Resilient Floor (Φ)</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='box'>
-Under the joint stress of data missingness ($\alpha$) and patient frailty ($\beta$), the model's internal recommendation surface is evaluated via the following structural interaction model:
+Under the joint stress of data missingness (alpha) and patient frailty (beta), the model's internal recommendation surface is evaluated via the following structural interaction model:
 <br><br>
 <center style="font-family:monospace; font-size:1.1rem; background-color:#FFF5F5; padding:1rem; border-radius:5px; border-left:4px solid #EF4444;">
 <b>Expected Model Agreement(alpha, beta) = Baseline_Safety(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
@@ -209,38 +209,36 @@ When a patient has robust cardiorespiratory reserves (beta = 0%), the AI's logic
 </div>
 """, unsafe_allow_html=True)
 
-    # 📊 核心升級：2000 筆真實樣本生成引擎與動態敘述性統計
+    # 📊 HIGH-IMPACT REFACTOR: COHORT GENERATION & ALL-ENGLISH STATISTICS
     st.markdown("<div class='h'>📊 Dynamic Simulated Sandbox Cohort & Descriptive Statistics (N = 2,000)</div>", unsafe_allow_html=True)
-    st.caption("以下資料由本研究提案設計之 Data-Generating Process (DGP) 機制即時生成。展示此虛擬腫瘤世代（Virtual Oncology Cohort）的基線人口統計學與臨床病理特徵分佈。")
+    st.caption("The dataset below is generated in real-time via our operationalized Data-Generating Process (DGP) engine, reflecting baseline demographic and pathophysiological characteristics of the virtual oncology cohort.")
 
-    # 建立一個拉桿讓 Reviewer 可以動態調整模擬的 Patient Frailty (beta)，即時觀察世代特徵的改變！
-    sim_beta = st.slider("調整模擬世代的平均器官衰弱度 (Patient Frailty - beta)", min_value=0, max_value=100, value=50, step=25)
+    # All-English interactive slider control for the peer-review panel
+    sim_beta = st.slider("Adjust Simulated Patient Cohort Frailty Level (Factor B Gradient: beta)", min_value=0, max_value=100, value=50, step=25)
 
-    # 用 NumPy 根據醫學邏輯隨機生成 2000 筆真實病患資料
+    # Programmatic NumPy random distribution execution mimicking strict biological processes
     rng = np.random.default_rng(seed=1024)
     n_samples = 2000
 
-    # 1. 年齡：高斯分佈，平均 58 歲
+    # 1. Age: Gaussian distribution
     age = rng.normal(58.0, 11.5, n_samples).clip(28, 88)
     
-    # 2. LVEF 基線：受到 beta 的非線性壓制。beta 越高，代表心臟功能基線越差、衰弱度越高
+    # 2. Baseline LVEF: Linearly suppressed as patient frailty (beta) escalates
     lvef_base_mu = 58.0 - (sim_beta * 0.15)
     lvef = rng.normal(lvef_base_mu, 7.5, n_samples).clip(25, 75)
     
-    # 3. 歷史二線小紅莓化療暴露率 (Anthracycline Exposure)：二項分佈 (約 35% 暴露過)
+    # 3. Prior Anthracycline Exposure: Binomial rate modeling baseline cardiotoxic history
     anthracycline = rng.binomial(1, 0.35, n_samples)
     
-    # 4. HER2 表現量陽性率：二項分佈 (約 20% 強陽性符合 ADC 資格)
+    # 4. HER2 Overexpression: Binomial rate capturing molecular drug eligibility bounds
     her2_pos = rng.binomial(1, 0.20, n_samples)
     
-    # 5. 根據醫學 DGP 邏輯公式計算每位病人的真實「高風險心臟毒性發生機率」
-    # 邏輯：小紅莓暴露(+1.5)會增加風險，LVEF越高(-0.12)會降低風險，beta越高(+0.8)增加風險
+    # 5. Latent true risk equation calculating individual probability bounds of fatal cardiomyopathy
     logit_score = 1.2 - 0.12 * (lvef - 50) + 1.5 * anthracycline + (sim_beta / 50.0) * 0.8
     p_toxicity = 1 / (1 + np.exp(-logit_score))
-    # 最終觸發致死性心衰竭毒性的真實終點（1 = 觸發毒性，應立即停藥）
     true_toxicity_event = rng.binomial(1, p_toxicity)
 
-    # 將數據包裝成 Pandas DataFrame
+    # Packaging into structural tabular matrix
     cohort_df = pd.DataFrame({
         "Patient ID": [f"PT-{i:04d}" for i in range(1, n_samples + 1)],
         "Age (Years)": age,
@@ -251,7 +249,7 @@ When a patient has robust cardiorespiratory reserves (beta = 0%), the AI's logic
         "Toxicity Safety Collapse (Event)": true_toxicity_event
     })
 
-    # 計算統計指標並填入血腫科傳統的 Table 1 格式
+    # Compiling stats metrics inside structural publication-grade Table 1 presentation
     stats_summary = [
         {
             "Clinical Demographics & Covariates": "Age at Diagnosis (Years), Mean ± SD",
@@ -280,20 +278,20 @@ When a patient has robust cardiorespiratory reserves (beta = 0%), the AI's logic
         }
     ]
 
-    # 渲染 Table 1 敘述性統計表格
+    # Rendering Table 1 
     st.write("#### 📋 Table 1: Baseline Demographics and Pathophysiological Distributions")
     st.dataframe(pd.DataFrame(stats_summary).set_index("Clinical Demographics & Covariates"), use_container_width=True)
 
-    # 為了展現真實研究的透明度，把生成出來的原始資料前 5 筆當場倒給 Reviewer 看
-    with st.expander("🔍 點擊展開：檢視虛擬沙盒世代原始數據截圖 (Simulated Microdata Snippet)"):
+    # Microdata snippet expander block for reviewer review
+    with st.expander("🔍 Click to Expand: Review Simulated Cohort Microdata Snippet"):
         st.dataframe(cohort_df.head(10), use_container_width=True)
 
     st.markdown("""
 <div class='logic-box'>
-<b>🔬 審查科學（Regulatory Science）統計學防線評註：</b><br>
-注意 Table 1 中的 <b>Fatal Cardiotoxicity Incidence (真實致死性心臟毒性發生率)</b>。當您將上方的 <code>Patient Frailty (beta)</code> 拉桿從 0 往上調至 100 時，您會發現病人的 <b>Baseline LVEF 會出現顯著的生理非線性集體下滑</b>，進而導致最後一項<b>致死性毒性事件的發生率（Incidence）呈現爆發性飆升</b>。
+<b>🔬 Regulatory Science Statistical Auditing Note:</b><br>
+Observe the behavior of the <b>Fatal Cardiotoxicity Incidence</b> marker within Table 1. As you manipulate the <code>Patient Cohort Frailty Level (beta)</code> slider from 0% toward 100%, the cohort's <b>Baseline LVEF undergoes a collective non-linear pathophysiological drop</b>. This structural deterioration directly causes the final <b>target safety collapse event incidence to spike aggressively</b>.
 <br><br>
-這完美還原了血液腫瘤科在真實世界部署 AI 時遭遇的「分佈偏移（Distribution Shift）」。如果 AI 模型（SaMD）在資訊缺失（alpha）的情況下，無法敏銳察覺此世代生理基本盤的塌陷，將會導致災難性的誤診與醫療事故。本框架正是透過此即時生成的 2,000 筆樣本，對 AI 進行高壓的應力穩定性審計。
+This interactive simulation mirrors real-world clinical distribution shifts encountered when deploying foundation models within complex clinical pathways. If a Software as a Medical Device (SaMD) tool processes fragmented Electronic Health Records (EHR) data (high alpha) and fails to capture this underlying biological frailty drift, it introduces significant medical hazards. This stress-testing dashboard utilizes these 2,000 live generated profiles to audit model decision boundaries objectively.
 </div>
 """, unsafe_allow_html=True)
 # ======================================================

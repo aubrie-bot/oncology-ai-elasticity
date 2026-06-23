@@ -165,14 +165,13 @@ To eliminate stochastic sampling noise, all model API (Application Programming I
 elif page == "3. Mathematical DGP & Descriptive Statistics":
     st.markdown("<div class='h'>Mathematical Formulation of the Data-Generating Process (DGP)</div>", unsafe_allow_html=True)
     
-    # Fully sanitized using programmatic raw strings and standard web-safe unicode characters
-    st.markdown(r"""
+    st.markdown("""
 <div class='box'>
 To establish strict, mathematically reproducible causal logic, the synthetic patient cohort generation relies on an explicit probabilistic function. 
 Let each patient profile <i>i</i> (where <i>i</i> = 1, ..., 2000) be represented as a multi-dimensional vector. The latent true clinical recommendation probability, P(Y<sub>i</sub> = 1 | beta), is governed by the structural logistic equation:
 <br><br>
 <center style="font-family:monospace; font-size:1.1rem; background-color:#EFF6FF; padding:1rem; border-radius:5px;">
-<b>log( P(Y<sub>i</sub>=1 | beta) / [1 - P(Y<sub>i</sub>=1 | beta)] ) = θ<sub>0</sub> + θ<sub>1</sub>·X<sub>1i</sub> + θ<sub>2</sub>·X<sub>2i</sub> + θ<sub>3</sub>·X<sub>3i</sub> - f(beta)·X<sub>3i</sub> + ε<sub>i</sub></b>
+<b>log( P(Y<sub>i</sub> = 1 | beta) / [1 - P(Y<sub>i</sub> = 1 | beta)] ) = θ<sub>0</sub> + θ<sub>1</sub>·X<sub>1i</sub> + θ<sub>2</sub>·X<sub>2i</sub> + θ<sub>3</sub>·X<sub>3i</sub> - f(beta)·X<sub>3i</sub> + ε<sub>i</sub></b>
 </center>
 <br>
 Where:<br>
@@ -182,14 +181,27 @@ Where:<br>
 • <b>ε<sub>i</sub> ~ N(0, σ²)</b> represents unmeasured stochastic clinical variation noise.<br>
 • <b>f(beta)</b> represents the operationalized guideline distortion function mapping the perturbation intensity along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
 <br><br>
-Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This mathematical partial derivative constraint ensures that semantic ablation (alpha) alters only the text presentation layer of the prompt and preserves the statistical covariance of the underlying empirical clinical truth intact.
+<b>Clinical Derivative Constraint (Physician-Friendly Translation):</b><br>
+Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. In plain medical terms, this partial derivative guarantees that the patient's underlying disease severity and the true clinical indication remain completely unchanged regardless of how text prompts are masked or anonymized. The objective clinical reality remains independent of vocabulary presentation.
+</div>
+""", unsafe_allow_html=True)
+
+    # 全新補入：針對血腫科醫師白話解釋 Log Formula 的區塊
+    st.markdown("<div class='h'>💡 Clinical Rationale: Why Do We Use a Log Formula?</div>", unsafe_allow_html=True)
+    st.markdown("""
+<div class='logic-box'>
+<b>Why use Logarithms in Oncology Patient Generation? (An Intuitive Explanation for Clinicians)</b><br>
+In pure mathematics, the raw clinical indicators of a patient (such as an LVEF of 30% or 60%) are continuous numbers that span linearly. However, in human physiology and oncology guidelines, <b>clinical risk does not scale linearly; it operates on a threshold switch</b>. 
+<br><br>
+For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication.
+<br><br>
+By applying the <b>log-odds equation (Logit transformation)</b> on the left side of our formula, we map these linear clinical input measurements (Age, HER2 status, LVEF) into a compressed, sigmoidal S-curve bounded strictly between <b>0% and 100% probability</b>. This mathematical setup perfectly mimics the decision-making process of a real-world multidisciplinary tumor board—transforming continuous biological variables into a concrete, binary clinical action (To Prescribe vs. Not to Prescribe).
 </div>
 """, unsafe_allow_html=True)
 
     st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
     st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
 
-    # Maintained the exact high-fidelity dataframe for publication-grade baseline statistics
     baseline_data = {
         "Clinical Variable & Covariates": [
             "Age at Diagnosis (Years)", 
@@ -223,6 +235,7 @@ Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This mathematical part
         ]
     }
     st.dataframe(pd.DataFrame(baseline_data), use_container_width=True)
+
 # ======================================================
 # SECTION 4: EXPECTED OUTCOMES & VISUALIZATIONS
 # ======================================================

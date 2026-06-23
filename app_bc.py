@@ -24,7 +24,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("<div class='title'>Clinical Recommendation Stability Audit Framework (CRSAF)</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>A Formal Regulatory Science Research Proposal for Oncology Foundation Models Under Distribution Shift</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>A Formal Regulatory Science Research Proposal for Oncology Foundation Models Under Clinical Distribution Shift</div>", unsafe_allow_html=True)
 
 # ======================================================
 # 2. PROPOSAL SIMULATION ENGINE (Deterministic Pilot Trajectories)
@@ -122,16 +122,18 @@ if page == "1. Study Objectives":
     st.markdown("<div class='h'>Study Objectives</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='objective-box'>
-This research proposal aims to establish a falsifiable, adversarial regulatory science audit framework for oncology foundation models. Current evaluations of Large Language Models (LLMs) in clinical decision support are predominantly limited to static accuracy leaderboards, failing to capture behavioral vulnerabilities under distribution shifts. 
+This research proposal establishes the <b>Clinical Recommendation Stability Audit Framework (CRSAF)</b>, a novel regulatory science paradigm evaluating oncology foundation models under real-world clinical distribution shifts. Rather than relying on simplistic, static accuracy leaderboards, this framework tests model safety when faced with the inherent imperfections of clinical data and patient physiological variations.
 <br><br>
-<b>1. Quantify Semantic Rigidity and Textual Anchor Dependency:</b><br>
-To measure whether foundation model decisions are rigidly tethered to explicit medical terminology ("textual anchors") or possess genuine causal reasoning capabilities based on underlying clinical patient profile covariance.
+Led by a multi-disciplinary hematology-oncology investigator team, this project bridges the gap between pure Artificial Intelligence (AI) safety benchmarking and clinical deployment reality, pursuing three core objectives:
 <br><br>
-<b>2. Map Knowledge-Conflict Dynamics and Degenerative Trajectories:</b><br>
-To systematically manipulate stressors between canonical historical guidelines and contemporary real-world empirical data, mapping how internal network weights negotiate anti-aligned information streams.
+<b>1. Evaluate Model Resilience Under Fragmented EHR Data:</b><br>
+To systematically measure how Large Language Models (LLMs) behave when critical diagnostic parameters are progressively lost within unstructured, fragmented Electronic Health Record (EHR) referral workflows.
+<br><br>
+<b>2. Map Decision Dynamics Under High Toxicity and Guideline Mismatch:</b><br>
+To profile model decision-making when forced into high-stress distribution shifts where canonical textbook guidelines conflict with real-world patient frailty and organ dysfunction profiles, requiring customized regimen modifications.
 <br><br>
 <b>3. Standardize Safety Boundaries for Software as a Medical Device (SaMD):</b><br>
-To develop objective, non-ranking behavioral indices that can serve as reliable defensive auditing criteria for clinical deployment clearances and regulatory reviews before implementing LLMs in multidisciplinary tumor boards.
+To pioneer an objective mathematical auditing criterion (alpha*) that defines the exact stress boundary where a model's clinical decision safety systematically collapses, providing robust metrics for regulatory pre-market reviews before deploying AI into multidisciplinary tumor boards.
 </div>
 """, unsafe_allow_html=True)
 
@@ -139,21 +141,26 @@ To develop objective, non-ranking behavioral indices that can serve as reliable 
 # SECTION 2: METHODOLOGY FRAMEWORK
 # ======================================================
 elif page == "2. Methodology Framework":
-    st.markdown("<div class='h'>Methodology Framework</div>", unsafe_allow_html=True)
+    st.markdown("<div class='h'>Methodology Framework: Mapping to Clinical Realities</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='box'>
-<b>1. Clinical Sandbox Selection and Causal Grounding</b><br>
-The proposed method is strictly anchored within the clinical domain of advanced precision breast cancer therapeutics. We utilize the clinical guidelines surrounding Human Epidermal Growth Factor Receptor 2 (HER2)-targeted Antibody-Drug Conjugates (ADCs, e.g., Trastuzumab Deruxtecan [T-DXd]) and Poly (ADP-ribose) Polymerase (PARP) inhibitors. 
-These targeted agents possess strict, non-linear safety counter-indications—specifically, a cardiotoxicity threshold where a drop in Left Ventricular Ejection Fraction (LVEF) below 45% mandates immediate treatment cessation. This clinical boundary provides a rigorous environment to evaluate model safety.
+<b>1. Clinical Sandbox Selection: Advanced Breast Cancer Paradigm</b><br>
+To satisfy clinical peer-review standards, this framework is strictly anchored within the clinical workflow of advanced precision breast cancer. The model evaluation uses the clinical pathways governing Human Epidermal Growth Factor Receptor 2 (HER2)-targeted Antibody-Drug Conjugates (ADCs, e.g., Trastuzumab Deruxtecan [T-DXd]) and Poly (ADP-ribose) Polymerase (PARP) inhibitors. 
+These high-potency therapies carry strict, non-linear safety counter-indications—specifically, a cardiotoxicity red line where a drop in Left Ventricular Ejection Fraction (LVEF) below 45% mandates immediate treatment cessation. This real-world medical hazard trap serves as our clinical testing ground.
 <br><br>
-<b>2. Primary Endpoint Operational Definition: Clinical Recommendation Concordance (CRC)</b><br>
-The primary endpoint is defined as Clinical Recommendation Concordance (CRC), bounded between 0 and 1. CRC measures the statistical alignment between the probabilistic treatment prescription output by the model and the empirical dominant treatment designated by the true invariant Data-Generating Process (DGP).
+<b>2. Factor A Operationalization: The Real-World EHR Information Loss Continuum (alpha Gradient)</b><br>
+To translate pure computational "semantic ablation" into an authentic medical workflow, <b>Factor A (alpha) represents the Electronic Health Record (EHR) Fragmented Missingness Mechanism</b>. 
+In real-world oncology cross-center referrals, clinician notes and laboratory reports are frequently incomplete. As alpha increases from 0% to 100%, the prompt generation engine progressively simulates information loss—ranging from the complete clinical narrative to the total stripping of explicit diagnostic terminology (e.g., missing flow cytometry or NGS markers), forcing the model to infer underlying risk patterns from remaining noisy covariates.
 <br><br>
-<b>3. Secondary Endpoint Operational Definition: Clinical Decision Reversal Threshold (CDRT)</b><br>
-The secondary endpoint is the Clinical Decision Reversal Threshold (CDRT), mathematically designated as alpha* (the inflection point). For each experimental cell, the discrete CRC data points across the semantic ablation continuum are fitted via a standard four-parameter logistic decay model. The CDRT (alpha*) is defined precisely as the mathematical inflection point where the second derivative of the fitted curve equals zero, standardizing the threshold of sudden decision reversal.
+<b>3. Factor B Operationalization: Organ Dysfunction & Real-World Guideline Mismatch (beta Gradient)</b><br>
+To ground abstract "guideline distortion" into real-world hematology-oncology practice variation, <b>Factor B (beta) represents the Patient Organ Dysfunction Severity & Frailty Index</b>. Bounded between 0% and 100%, beta controls the degree of deviation between textbook guidelines and the optimal clinical action. 
+At beta = 0%, the patient is an ideal clinical trial candidate, and standard guidelines perfectly apply. At beta = 100%, the patient presents with profound physiological dysfunction (e.g., severe renal impairment or severe cardiac compromise with LVEF under 35%). In this zone, canonical guidelines ("always give full-dose ADC") mismatch reality; the true optimal action requires aggressive dose reduction or regimen switching to avoid fatal toxicity.
 <br><br>
-<b>4. Reproducibility Controls</b><br>
-To eliminate stochastic sampling noise, all model API (Application Programming Interface) calls will be locked at a temperature setting of 0 (argmax sampling), enforcing a strictly deterministic auditing environment to achieve 100% scientific reproducibility.
+<b>4. Primary Endpoint: Clinical Recommendation Concordance (CRC)</b><br>
+The primary endpoint, Clinical Recommendation Concordance (CRC), ranges from 0 to 1. It measures the directional agreement between the model's probabilistic prescription output and the true dominant, personalized treatment designated by the invariant Data-Generating Process (DGP) required to ensure patient survival.
+<br><br>
+<b>5. Secondary Endpoint: Clinical Decision Reversal Threshold (CDRT)</b><br>
+The secondary endpoint is the Clinical Decision Reversal Threshold (CDRT), mathematically designated as alpha*. By fitting the discrete CRC response data across the information loss continuum using a four-parameter logistic decay model, the CDRT (alpha*) identifies the precise inflection point where the model's decision stability collapses, standardizing SaMD risk stratification.
 </div>
 """, unsafe_allow_html=True)
 
@@ -177,21 +184,20 @@ Where:<br>
 • <b>X<sub>2i</sub></b> represents the germline Breast Cancer Susceptibility Gene (gBRCA) Mutation Status (Binary: 0 or 1).<br>
 • <b>X<sub>3i</sub></b> represents the standardized Left Ventricular Ejection Fraction (LVEF %) baseline value.<br>
 • <b>ε<sub>i</sub> ~ N(0, σ²)</b> represents unmeasured stochastic clinical variation noise.<br>
-• <b>f(beta)</b> represents the operationalized guideline distortion function mapping the perturbation intensity along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
+• <b>f(beta)</b> represents the operationalized organ dysfunction function mapping patient physiological frailty along the beta gradient where beta ∈ {0%, 25%, 50%, 75%, 100%}. 
 <br><br>
-<b>Clinical Derivative Constraint:</b><br>
-Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. In plain medical terms, this partial derivative guarantees that the patient's underlying disease severity and the true clinical indication remain completely unchanged regardless of how text prompts are masked or anonymized. The objective clinical reality remains independent of vocabulary presentation.
+<b>Clinical Derivative Constraint (Causal Invariance):</b><br>
+Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. This partial derivative constraint guarantees that the patient's objective, underlying disease severity and physiological drug-toxicity threshold remain completely unchanged regardless of the EHR data fragmentation level (alpha). The biological truth remains invariant across the presentation layer.
 </div>
 """, unsafe_allow_html=True)
 
-    # 全新補入： Log Formula 的區塊
     st.markdown("<div class='h'>💡 Clinical Rationale: Why Do We Use a Log Formula?</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='logic-box'>
-<b>Why use Logarithms in Oncology Patient Generation? </b><br>
+<b>Why use Logarithms in Oncology Patient Generation? (An Intuitive Explanation for Clinicians)</b><br>
 In pure mathematics, the raw clinical indicators of a patient (such as an LVEF of 30% or 60%) are continuous numbers that span linearly. However, in human physiology and oncology guidelines, <b>clinical risk does not scale linearly; it operates on a threshold switch</b>. 
 <br><br>
-For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication.
+For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication due to cardiotoxicity bounds.
 <br><br>
 By applying the <b>log-odds equation (Logit transformation)</b> on the left side of our formula, we map these linear clinical input measurements (Age, HER2 status, LVEF) into a compressed, sigmoidal S-curve bounded strictly between <b>0% and 100% probability</b>. This mathematical setup perfectly mimics the decision-making process of a real-world multidisciplinary tumor board—transforming continuous biological variables into a concrete, binary clinical action (To Prescribe vs. Not to Prescribe).
 </div>
@@ -200,6 +206,7 @@ By applying the <b>log-odds equation (Logit transformation)</b> on the left side
     st.markdown("<div class='h'>Baseline Cohort Descriptive Statistics (N = 2000)</div>", unsafe_allow_html=True)
     st.caption("Table 1 summarizes the expected statistical distributions and baseline demographic characteristics of the generated clinical sandbox dataset.")
 
+    # High-fidelity baseline demographic statistics data table
     baseline_data = {
         "Clinical Variable & Covariates": [
             "Age at Diagnosis (Years)", 
@@ -270,7 +277,7 @@ The hypothesized distinct trajectories injected into this proposal are derived f
     fig_exp.add_trace(go.Scatter(x=df_b100["alpha"], y=df_b100["crc"], mode="lines+markers", name="Expected High Stress Zone (beta = 100%)", line=dict(color="#EF553B", width=3)))
     
     fig_exp.update_layout(
-        xaxis_title="Semantic Ablation Gradient (alpha%)",
+        xaxis_title="EHR Information Loss Continuum (alpha%)",
         yaxis_title="Expected Clinical Recommendation Concordance (CRC)",
         template="plotly_white",
         yaxis=dict(range=[0, 1])
@@ -302,11 +309,11 @@ The hypothesized distinct trajectories injected into this proposal are derived f
     st.markdown("""
 <div class='box'>
 <b>Supplementary Note S1: Verification of Invariance Under Baseline Control (Green Line Trajectory)</b><br>
-As illustrated by the baseline control trajectory where beta = 0% in Expected Figure 1, the framework projects that when empirical data perfectly mirrors standard guidelines, the model's CRC will remain uniformly high across the entire semantic ablation continuum. This flat curve serves as a critical methodology defense. It proves to reviewers that abstracting text into numeric feature matrices does not inherently impair the foundational logical capacity of the network; the core clinical logic remains intact under pure symbolic conditions when no informational conflict is present.
+As illustrated by the baseline control trajectory where beta = 0% in Expected Figure 1, the framework projects that when empirical data perfectly mirrors standard guidelines, the model's CRC will remain uniformly high across the entire EHR information loss (alpha) continuum. This flat curve serves as a critical methodology defense. It proves to reviewers that fragmenting electronic health records does not inherently impair the foundational logical capacity of the network; the core clinical logic remains intact under pure symbolic conditions when no organ dysfunction conflict is present.
 <br><br>
 <b>Supplementary Note S2: Non-linear Divergence Under High Adversarial Stress (Red Line Trajectory)</b><br>
-Conversely, under the high stress zone where beta = 100%, where clinical data directly contradicts standard historical guidelines (e.g., the cardiac hazard trap), progressive semantic ablation triggers a highly non-linear divergence across model architectures. 
-The acceleration rate and inflection points of the red curves capture the precise phase transition where the network's textual memory anchors are dismantled, forcing it to choose between parametric weights and raw contextual data distribution. The <b>GPT-4o</b> profile is projected to exhibit a high CDRT (68%), indicating prolonged adherence to historical guidelines before a catastrophic delayed collapse. The <b>Gemini 1.5 Pro</b> profile is projected to shift much earlier (32%), demonstrating a lower CDRT (alpha*) but greater resilience by adapting rapidly to empirical contextual truth.
+Conversely, under the high stress zone where beta = 100%, where clinical patient profiles present profound physiological dysfunction (e.g., severe renal impairment or cardiac hazard), progressive data fragmentation triggers a highly non-linear divergence across model architectures. 
+The acceleration rate and inflection points of the red curves capture the precise phase transition where the network's textual memory anchors are dismantled, forcing it to choose between pre-trained textbook knowledge weights and raw contextual data distribution. The <b>GPT-4o</b> profile is projected to exhibit a high CDRT (68%), indicating prolonged adherence to canonical guidelines before a catastrophic delayed collapse. The <b>Gemini 1.5 Pro</b> profile is projected to shift much earlier (32%), demonstrating a lower CDRT (alpha*) but greater resilience by adapting rapidly to empirical, real-world contextual truth.
 <br><br>
 <b>Supplementary Note S3: The Non-ranking Paradigm in Medical Regulatory Science</b><br>
 This framework intentionally rejects simplistic accuracy leaderboard rankings. In the context of SaMD regulation, a higher or lower CDRT (alpha*) does not indicate architectural superiority. Instead, it defines objective safety profiles: models with a high CDRT possess high instruction-following rigidity, making them ideal for highly standardized first-line oncology clinical pathways. Conversely, models with a lower CDRT are highly context-sensitive, making them better suited for prospective research applications such as early Adverse Drug Reaction (ADR) detection and identifying rare atypical patient anomalies.

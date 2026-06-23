@@ -186,11 +186,11 @@ Crucially, <b>∂P(Y<sub>i</sub> = 1) / ∂alpha = 0</b>. In plain medical terms
 </div>
 """, unsafe_allow_html=True)
 
-    # 全新補入：針對血腫科醫師白話解釋 Log Formula 的區塊
+    # 全新補入： Log Formula 的區塊
     st.markdown("<div class='h'>💡 Clinical Rationale: Why Do We Use a Log Formula?</div>", unsafe_allow_html=True)
     st.markdown("""
 <div class='logic-box'>
-<b>Why use Logarithms in Oncology Patient Generation? (An Intuitive Explanation for Clinicians)</b><br>
+<b>Why use Logarithms in Oncology Patient Generation? </b><br>
 In pure mathematics, the raw clinical indicators of a patient (such as an LVEF of 30% or 60%) are continuous numbers that span linearly. However, in human physiology and oncology guidelines, <b>clinical risk does not scale linearly; it operates on a threshold switch</b>. 
 <br><br>
 For instance, a drop in LVEF from 60% to 55% is clinically negligible, but a drop from 48% to 43% triggers an immediate clinical hazard, fundamentally reversing the treatment recommendation from standard-of-care to absolute counter-indication.

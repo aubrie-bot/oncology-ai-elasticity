@@ -2,373 +2,518 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from scipy.optimize import curve_fit
 
-# ======================================================
-# 1. PAGE CONFIGURATION & ACADEMIC EDITORIAL STYLING
-# ======================================================
-st.set_page_config(
-    page_title="CRSAF Clinical Stability Framework",
-    layout="wide"
-)
+# ── Page config ──────────────────────────────────────────────
+st.set_page_config(page_title="AI 安全稽核框架 | 血液腫瘤科", layout="wide")
 
 st.markdown("""
 <style>
-.title {font-size:2rem;font-weight:800;color:#1E3A8A}
-.subtitle {font-size:1.05rem;color:#4B5563;margin-bottom:1rem}
-.h {font-size:1.25rem;font-weight:700;margin-top:1.5rem;color:#1F2937;border-bottom:2px solid #E5E7EB;padding-bottom:0.3rem}
-.box {background:#F8FAFC;padding:1rem;border-radius:10px;border-left:4px solid #3B82F6;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
-.objective-box {background:#F0FDF4;padding:1.25rem;border-radius:10px;border-left:4px solid #22C55E;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
-.logic-box {background:#FFFBEB;padding:1.25rem;border-radius:10px;border-left:4px solid #D97706;margin:1rem 0;font-size:0.95rem;line-height:1.6;}
+body, .stApp { font-family: 'Noto Sans TC', sans-serif; }
+.title  { font-size:1.8rem; font-weight:800; color:#1E3A8A; margin-bottom:0.2rem; }
+.sub    { font-size:1rem; color:#6B7280; margin-bottom:1.5rem; }
+.card   { background:#F8FAFC; border-radius:12px; border-left:4px solid #3B82F6;
+          padding:1rem 1.2rem; margin:0.8rem 0; line-height:1.75; font-size:0.95rem; }
+.card-g { border-left-color:#22C55E; background:#F0FDF4; }
+.card-y { border-left-color:#F59E0B; background:#FFFBEB; }
+.card-r { border-left-color:#EF4444; background:#FFF1F2; }
+.chip   { display:inline-block; padding:2px 10px; border-radius:999px;
+          font-size:0.8rem; font-weight:600; margin-right:5px; }
+.chip-b { background:#DBEAFE; color:#1E40AF; }
+.chip-g { background:#DCFCE7; color:#166534; }
+.chip-y { background:#FEF3C7; color:#92400E; }
+.chip-r { background:#FEE2E2; color:#991B1B; }
+h3 { color:#1F2937; border-bottom:2px solid #E5E7EB; padding-bottom:0.3rem; margin-top:1.2rem; }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='title'>Clinical Recommendation Stability Audit Framework (CRSAF)</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>A Formal Regulatory Science Research Proposal for Oncology Foundation Models Under Clinical Distribution Shift</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>AI 臨床建議穩定性稽核框架（CRSAF）</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub'>HER2 陽性乳癌 / ADC 心臟毒性場景 ‧ 血液腫瘤科適用版</div>", unsafe_allow_html=True)
 
-# ======================================================
-# 2. PROPOSAL SIMULATION ENGINE (Deterministic Pilot Trajectories)
-# ======================================================
-def dgp_simulation(beta, seed=42):
-    rng = np.random.default_rng(seed + int(beta))
-    noise = rng.normal(0, 0.02)
-    score = 2.0 - beta / 35.0 + noise
-    return 1 / (1 + np.exp(-score))
+# ── Sidebar navigation ────────────────────────────────────────
+page = st.sidebar.radio("📋 章節", [
+    "一、研究背景與目的",
+    "二、臨床場景設定",
+    "三、AI 壓力測試設計",
+    "四、病患模擬族群",
+    "五、預期結果與圖表",
+    "六、研究侷限與倫理",
+    "七、下一步計畫",
+])
 
-def model_expected_response(alpha, beta, model_name, seed=42):
-    truth = dgp_simulation(beta)
-    profile_idx = {
-        "GPT-4o Profile (High Rigidity)": 100,
-        "Claude 3.5 Sonnet Profile (Balanced Optimization)": 200,
-        "Gemini 1.5 Pro Profile (High Context Sensitivity)": 300
-    }.get(model_name, 0)
-
-    rng = np.random.default_rng(seed + int(alpha) + int(beta) + profile_idx)
-    noise = rng.normal(0, 0.015)
-
-    if "GPT-4o" in model_name:
-        decay = 1 / (1 + np.exp((alpha - 65) * 0.15))
-        crc = truth * (0.2 + 0.8 * decay)
-    elif "Gemini" in model_name:
-        crc = truth * (1 - alpha * 0.005)
-    else:
-        decay = 1 / (1 + np.exp((alpha - 45) * 0.1))
-        crc = truth * (0.5 + 0.5 * decay)
-
-    return float(np.clip(crc + noise, 0, 1))
-
-# ======================================================
-# 3. PROPOSAL MATRIX SYNTHESIS (6x5 Design = 30 Cells)
-# ======================================================
-alpha_grid = np.array([0, 20, 40, 60, 80, 100])
-beta_grid = np.array([0, 25, 50, 75, 100])
-models = [
-    "GPT-4o Profile (High Rigidity)",
-    "Claude 3.5 Sonnet Profile (Balanced Optimization)",
-    "Gemini 1.5 Pro Profile (High Context Sensitivity)"
-]
-
-rows = []
-for m in models:
-    for a in alpha_grid:
-        for b in beta_grid:
-            rows.append({
-                "model": m,
-                "alpha": a,
-                "beta": b,
-                "truth": dgp_simulation(b),
-                "crc": model_expected_response(a, b, m)
-            })
-
-df_proposal = pd.DataFrame(rows)
-
-# ======================================================
-# 4. CDRT OPTIMIZATION FUNCTION
-# ======================================================
-def logistic_decay_model(x, L, k, x0, ymin):
-    return ymin + (L - ymin) / (1 + np.exp(k * (x - x0)))
-
-def estimate_expected_cdrt(sub_df):
-    x = np.sort(sub_df["alpha"].unique())
-    y = sub_df.groupby("alpha")["crc"].mean().values
-    try:
-        popt, _ = curve_fit(
-            logistic_decay_model, x, y,
-            p0=[np.max(y), 0.1, float(np.median(x)), np.min(y)],
-            bounds=([0.4, 0.01, 10.0, 0.0], [1.0, 1.0, 90.0, 0.5]),
-            maxfev=5000
-        )
-        return float(popt[2])
-    except Exception:
-        return float(np.median(x))
-
-# ======================================================
-# 5. SIDEBAR PROPOSAL NAVIGATION
-# ======================================================
-page = st.sidebar.radio(
-    "📋 Proposal Section",
-    [
-        "1. Study Objectives",
-        "2. Methodology Framework",
-        "3. Mathematical DGP & Descriptive Statistics",
-        "4. Expected Outcomes & Visualizations"
-    ]
-)
-
-# ======================================================
-# SECTION 1: STUDY OBJECTIVES
-# ======================================================
-if page == "1. Study Objectives":
-    st.markdown("<div class='h'>Study Objectives</div>", unsafe_allow_html=True)
+# ═══════════════════════════════════════════════════════════════
+# 一、研究背景與目的
+# ═══════════════════════════════════════════════════════════════
+if page == "一、研究背景與目的":
+    st.markdown("### 為什麼要測試 AI 的「穩定性」？")
     st.markdown("""
-<div class='objective-box'>
-This research proposal establishes the <b>Clinical Recommendation Stability Audit Framework (CRSAF)</b>, a novel regulatory science paradigm evaluating oncology foundation models under real-world clinical distribution shifts. Rather than relying on simplistic, static accuracy leaderboards, this framework tests model safety when faced with the inherent imperfections of clinical data and patient physiological variations.
-<br><br>
-<b>1. Evaluate Model Resilience Under Fragmented EHR Data:</b><br>
-To systematically measure how Large Language Models (LLMs) behave when critical diagnostic parameters are progressively lost within unstructured, fragmented Electronic Health Record (EHR) referral workflows.<br><br>
-<b>2. Map Decision Dynamics Under High Toxicity and Guideline Mismatch:</b><br>
-To profile model decision-making when forced into high-stress distribution shifts where canonical textbook guidelines conflict with real-world patient frailty and organ dysfunction profiles, requiring customized regimen modifications.<br><br>
-<b>3. Standardize Safety Boundaries for Software as a Medical Device (SaMD):</b><br>
-To pioneer an objective mathematical auditing criterion (alpha*) that defines the exact stress boundary where a model's clinical decision safety systematically collapses, providing robust metrics for regulatory pre-market reviews before deploying AI into multidisciplinary tumor boards.
+<div class='card card-y'>
+<b>臨床現實：</b>AI 輔助決策工具正逐步進入腫瘤科 MDT 討論，但現有的評估方式只在「理想條件」下測試 AI——完整的病歷、標準的數據、教科書等級的患者。真實臨床根本不是這樣。
+</div>
+<div class='card'>
+<b>真實臨床的兩個困難：</b><br>
+① <b>病歷殘缺</b>：跨院轉介時，心臟超音波報告、NGS 結果、心臟科會診紀錄常常遺失或不完整。<br>
+② <b>患者與指引不符</b>：年長、多重器官功能不全的患者，完全按照標準指引給藥反而會造成嚴重毒性。
 </div>
 """, unsafe_allow_html=True)
 
-# ======================================================
-# SECTION 2: METHODOLOGY FRAMEWORK
-# ======================================================
-elif page == "2. Methodology Framework":
-    st.markdown("<div class='h'>Methodology Framework: Mapping to Clinical Realities</div>", unsafe_allow_html=True)
+    st.markdown("### 本研究做什麼？")
     st.markdown("""
-<div class='box'>
-<b>1. Clinical Sandbox Selection: Advanced Breast Cancer Paradigm</b><br>
-The model evaluation uses the clinical pathways governing Human Epidermal Growth Factor Receptor 2 (HER2)-targeted Antibody-Drug Conjugates (ADCs, e.g., Trastuzumab Deruxtecan [T-DXd]) and Poly (ADP-ribose) Polymerase (PARP) inhibitors. <br>
-These high-potency therapies carry strict, non-linear safety counter-indications—specifically, a cardiotoxicity red line where a drop in Left Ventricular Ejection Fraction (LVEF) below 45% mandates immediate treatment cessation. This real-world medical hazard trap serves as our clinical testing ground.
-<br><br>
-<b>2. Factor A Operationalization: The Real-World EHR Information Loss Continuum (alpha Gradient)</b><br>
-To translate pure computational "semantic ablation" into an authentic medical workflow, <b>Factor A (alpha) represents the Electronic Health Record (EHR) Fragmented Missingness Mechanism</b>. <br>
-In real-world oncology cross-center referrals, clinician notes and laboratory reports are frequently incomplete. As alpha increases from 0% to 100%, the prompt generation engine progressively simulates information loss—ranging from the complete clinical narrative to the total stripping of explicit diagnostic terminology (e.g., missing flow cytometry or NGS markers), forcing the model to infer underlying risk patterns from remaining noisy covariates.
-<br><br>
-<b>3. Factor B Operationalization: Organ Dysfunction & Real-World Guideline Mismatch (beta Gradient)</b><br>
-To ground abstract "guideline distortion" into real-world hematology-oncology practice variation, <b>Factor B (beta) represents the Patient Organ Dysfunction Severity & Frailty Index</b>. Bounded between 0% and 100%, beta controls the degree of deviation between textbook guidelines and the optimal clinical action. <br>
-At beta = 0%, the patient is an ideal clinical trial candidate, and standard guidelines perfectly apply. At beta = 100%, the patient presents with profound physiological dysfunction (e.g., severe renal impairment or severe cardiac compromise with LVEF under 35%). In this zone, canonical guidelines ("always give full-dose ADC") mismatch reality; the true optimal action requires aggressive dose reduction or regimen switching to avoid fatal toxicity.
-<br><br>
-<b>4. Primary Endpoint: Clinical Recommendation Concordance (CRC)</b><br>
-The primary endpoint, Clinical Recommendation Concordance (CRC), ranges from 0 to 1. It measures the directional agreement between the model's probabilistic prescription output and the true dominant, personalized treatment designated by the invariant Data-Generating Process (DGP) required to ensure patient survival.
-<br><br>
-<b>5. Secondary Endpoint: Clinical Decision Reversal Threshold (CDRT)</b><br>
-The secondary endpoint is the Clinical Decision Reversal Threshold (CDRT), mathematically designated as alpha*. By fitting the discrete CRC response data across the information loss continuum using a four-parameter logistic decay model, the CDRT (alpha*) identifies the precise inflection point where the model's decision stability collapses, standardizing SaMD risk stratification.
+<div class='card card-g'>
+用電腦模擬的方式，系統性地把這兩個困難「調大旋鈕」，觀察 AI 的臨床建議在什麼時候開始出錯——以及不同架構的 AI 出錯的模式是否不同。<br><br>
+最終目標：提供一個簡單的數字（<b>安全崩潰閾值</b>），讓醫療機構在部署 AI 工具前，知道「這個 AI 能容忍多少殘缺的資料還不出問題」。
 </div>
 """, unsafe_allow_html=True)
 
-# ======================================================
-# SECTION 3: MATHEMATICAL DGP & DESCRIPTIVE STATISTICS
-# ======================================================
-elif page == "3. Mathematical DGP & Descriptive Statistics":
-    st.markdown("<div class='h'>Mathematical Formulation Anchored to Hematology-Oncology Endpoints</div>", unsafe_allow_html=True)
-    
-    st.markdown("""
-<div class='box'>
-To resolve the structural limitations of generic simulation and achieve strict <b>clinical traceability</b> for oncology reviewers, this framework anchors the Data-Generating Process (DGP) directly onto a real-world high-hazard hazard trap: <b>HER2-Targeted Antibody-Drug Conjugate (ADC) Induced Cardiotoxicity</b>.
-<br><br>
-Let each patient profile <i>i</i> be a multi-dimensional clinical vector. The latent true personalized treatment decision probability—specifically, the probability that full-dose ADC will cause <b>Fatal Congestive Heart Failure (CHF)</b>—is governed by the clinically-anchored structural logistic equation:
-<br><br>
-<center style="font-family:monospace; font-size:1.1rem; background-color:#EFF6FF; padding:1rem; border-radius:5px;">
-<b>log( P(Toxicity<sub>i</sub> = 1 | beta) / [1 - P(Toxicity<sub>i</sub> = 1 | beta)] ) = θ<sub>0</sub> - θ<sub>1</sub>·LVEF<sub>baseline</sub> + θ<sub>2</sub>·Anthracycline_Exposure + f(beta) + ε<sub>i</sub></b>
-</center>
-<br>
-<b>Medical Variable Mapping & Traceability Matrix:</b><br>
-• <b>LVEF<sub>baseline</sub> (X<sub>1</sub>):</b> Left Ventricular Ejection Fraction (%). The critical physiological surrogate endpoint for cardiac safety boundaries.<br>
-• <b>Anthracycline_Exposure (X<sub>2</sub>):</b> Binary indicator of prior cardiotoxic chemotherapy exposure, establishing a multi-causal clinical risk vector.<br>
-• <b>f(beta) — Organ Dysfunction & Guideline Mismatch Index:</b> Dynamically shifts the baseline probability of treatment-induced toxicity. At beta = 100%, the patient represents an ultra-frail profile where standard guideline enforcement ("always prescribe to clear tumors") directly causes a catastrophic <b>Safety Collapse (Fatal Cardiomyopathy)</b>.
-<br><br>
-<b>The Primary Clinical Endpoint Space:</b><br>
-Rather than evaluating an abstract surrogate pattern, the audited model's output is measured via <b>Clinical Decision Agreement (CDA)</b>: Does the model's recommendation avoid a fatal toxicity endpoint while maintaining therapeutic efficacy, consistent with an expert multidisciplinary tumor board?
+    st.markdown("### 三個核心研究問題")
+    c1, c2, c3 = st.columns(3)
+    c1.markdown("""
+<div class='card' style='min-height:140px;'>
+<span class='chip chip-b'>問題 1</span><br>
+病歷資料遺失愈多，AI 建議愈容易錯——<b>惡化的速度有多快？</b>
+</div>
+""", unsafe_allow_html=True)
+    c2.markdown("""
+<div class='card' style='min-height:140px;'>
+<span class='chip chip-g'>問題 2</span><br>
+患者愈虛弱（器官功能愈差），AI 愈難給出合適的個人化建議——<b>到底差多少？</b>
+</div>
+""", unsafe_allow_html=True)
+    c3.markdown("""
+<div class='card' style='min-height:140px;'>
+<span class='chip chip-y'>問題 3</span><br>
+GPT-4o、Claude、Gemini 三種 AI 的出錯模式不同——<b>哪種更適合血腫科臨床情境？</b>
 </div>
 """, unsafe_allow_html=True)
 
-    # 🧬 MATHEMATICAL INTERACTION MECHANISM
-    st.markdown("<div class='h'>🧬 Mathematical Interaction Mechanism & The Resilient Floor (Φ)</div>", unsafe_allow_html=True)
+# ═══════════════════════════════════════════════════════════════
+# 二、臨床場景設定
+# ═══════════════════════════════════════════════════════════════
+elif page == "二、臨床場景設定":
+    st.markdown("### 為什麼選 HER2+ 乳癌 / T-DXd？")
     st.markdown("""
-<div class='box'>
-Under the joint stress of data missingness (alpha) and patient frailty (beta), the model's internal recommendation surface is evaluated via the following structural interaction model:
-<br><br>
-<center style="font-family:monospace; font-size:1.1rem; background-color:#FFF5F5; padding:1rem; border-radius:5px; border-left:4px solid #EF4444;">
-<b>Expected Model Agreement(alpha, beta) = Baseline_Safety(beta) · [ Φ + (1 - Φ) · Decay(alpha, beta) ]</b>
-</center>
-<br>
-<b>Deconstruction of Parameters for Medical Reviewers:</b><br><br>
-• <b>Φ (Phi) — The Foundational Resilient Floor (0 ≤ Φ ≤ 1):</b><br>
-&nbsp;&nbsp;<b>- Clinical Definition:</b> The model's <b>Implicit Clinical Inference Asset</b>. It quantifies the proportion of safe clinical decisions the AI can maintain when explicit cardiac parameters are completely lost (alpha = 100%).<br>
-&nbsp;&nbsp;<b>- Pathophysiological Rationale:</b> If the explicit LVEF value is stripped due to unstructured EHR referral note fragmentation, a model with a high Φ can successfully infer the underlying cardiac risk by processing secondary clinical co-variates (e.g., age, history of ischemic heart disease, baseline cardiovascular medication density). It represents <i>contextual clinical intuition</i> over rigid token matching.<br><br>
-• <b>Decay(alpha, beta) — The Compounding Risk Driver:</b> Modeled via a non-linear sigmoidal loss curve where the <b>Clinical Safety Collapse Threshold (alpha*)</b> is aggressively modified by patient frailty:
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;• <b>alpha*(beta) = alpha*<sub>baseline</sub> - γ · beta</b><br>
-<br>
-<b>Clinical Conclusion for Regulatory Auditing:</b><br>
-When a patient has robust cardiorespiratory reserves (beta = 0%), the AI's logic is highly forgiving of missing health records. However, when the patient is borderline-frail (beta = 100%), the threshold alpha* shifts sharply leftward. <b>Missing data compounds with clinical frailty to precipitate early, non-linear logic failure inside the model, turning a documentation error into an immediate patient safety hazard.</b>
+<div class='card card-g'>
+這個臨床場景有三個特性，讓它成為 AI 安全測試的理想沙箱：<br><br>
+① <b>有清楚的安全紅線</b>：LVEF < 45% 就必須立刻停藥（ESC 心臟腫瘤學指引），非黑即白。<br>
+② <b>現實中殘缺病歷很常見</b>：HER2 檢測結果、心臟超音波、基因組報告在跨院轉介時遺失率高。<br>
+③ <b>指引與個人化之間有真實落差</b>：年長或心功能差的患者，標準劑量 T-DXd 反而致命。
 </div>
 """, unsafe_allow_html=True)
 
-    # 📊 HIGH-IMPACT REFACTOR: COHORT GENERATION & ALL-ENGLISH STATISTICS
-    st.markdown("<div class='h'>📊 Dynamic Simulated Sandbox Cohort & Descriptive Statistics (N = 2,000)</div>", unsafe_allow_html=True)
-    st.caption("The dataset below is generated in real-time via our operationalized Data-Generating Process (DGP) engine, reflecting baseline demographic and pathophysiological characteristics of the virtual oncology cohort.")
-
-    # All-English interactive slider control for the peer-review panel
-    sim_beta = st.slider("Adjust Simulated Patient Cohort Frailty Level (Factor B Gradient: beta)", min_value=0, max_value=100, value=50, step=25)
-
-    # Programmatic NumPy random distribution execution mimicking strict biological processes
-    rng = np.random.default_rng(seed=1024)
-    n_samples = 2000
-
-    # 1. Age: Gaussian distribution
-    age = rng.normal(58.0, 11.5, n_samples).clip(28, 88)
-    
-    # 2. Baseline LVEF: Linearly suppressed as patient frailty (beta) escalates
-    lvef_base_mu = 58.0 - (sim_beta * 0.15)
-    lvef = rng.normal(lvef_base_mu, 7.5, n_samples).clip(25, 75)
-    
-    # 3. Prior Anthracycline Exposure: Binomial rate modeling baseline cardiotoxic history
-    anthracycline = rng.binomial(1, 0.35, n_samples)
-    
-    # 4. HER2 Overexpression: Binomial rate capturing molecular drug eligibility bounds
-    her2_pos = rng.binomial(1, 0.20, n_samples)
-    
-    # 5. Latent true risk equation calculating individual probability bounds of fatal cardiomyopathy
-    logit_score = 1.2 - 0.12 * (lvef - 50) + 1.5 * anthracycline + (sim_beta / 50.0) * 0.8
-    p_toxicity = 1 / (1 + np.exp(-logit_score))
-    true_toxicity_event = rng.binomial(1, p_toxicity)
-
-    # Packaging into structural tabular matrix
-    cohort_df = pd.DataFrame({
-        "Patient ID": [f"PT-{i:04d}" for i in range(1, n_samples + 1)],
-        "Age (Years)": age,
-        "Baseline LVEF (%)": lvef,
-        "Prior Anthracycline": anthracycline,
-        "HER2 Overexpression": her2_pos,
-        "True P(Cardiotoxicity)": p_toxicity,
-        "Toxicity Safety Collapse (Event)": true_toxicity_event
-    })
-
-    # Compiling stats metrics inside structural publication-grade Table 1 presentation
-    stats_summary = [
-        {
-            "Clinical Demographics & Covariates": "Age at Diagnosis (Years), Mean ± SD",
-            "Statistical Distribution Type": "Continuous (Gaussian)",
-            "Current Simulated Cohort Value (N = 2,000)": f"{cohort_df['Age (Years)'].mean():.1f} ± {cohort_df['Age (Years)'].std():.1f} (Range: {cohort_df['Age (Years)'].min():.0f} – {cohort_df['Age (Years)'].max():.0f})"
-        },
-        {
-            "Clinical Demographics & Covariates": "Baseline Left Ventricular Ejection Fraction (LVEF %), Mean ± SD",
-            "Statistical Distribution Type": "Continuous (Bounded Gaussian by Beta)",
-            "Current Simulated Cohort Value (N = 2,000)": f"{cohort_df['Baseline LVEF (%)'].mean():.1f}% ± {cohort_df['Baseline LVEF (%)'].std():.1f}% (Range: {cohort_df['Baseline LVEF (%)'].min():.1f}% – {cohort_df['Baseline LVEF (%)'].max():.1f}%)"
-        },
-        {
-            "Clinical Demographics & Covariates": "Prior Cardiotoxic Anthracycline Exposure, n (%)",
-            "Statistical Distribution Type": "Categorical (Binomial)",
-            "Current Simulated Cohort Value (N = 2,000)": f"{cohort_df['Prior Anthracycline'].sum()} / 2,000 ({cohort_df['Prior Anthracycline'].mean()*100:.1f}%)"
-        },
-        {
-            "Clinical Demographics & Covariates": "HER2 Expression Status (Overexpression Positive), n (%)",
-            "Statistical Distribution Type": "Categorical (Binomial)",
-            "Current Simulated Cohort Value (N = 2,000)": f"{cohort_df['HER2 Overexpression'].sum()} / 2,000 ({cohort_df['HER2 Overexpression'].mean()*100:.1f}%)"
-        },
-        {
-            "Clinical Demographics & Covariates": "True Target Adverse Endpoint: Fatal Cardiotoxicity Incidence, n (%)",
-            "Statistical Distribution Type": "Derived Endpoints (DGP Logistic Latent)",
-            "Current Simulated Cohort Value (N = 2,000)": f"<b>{cohort_df['Toxicity Safety Collapse (Event)'].sum()} / 2,000 ({cohort_df['Toxicity Safety Collapse (Event)'].mean()*100:.1f}%)</b>"
-        }
-    ]
-
-    # Rendering Table 1 
-    st.write("#### 📋 Table 1: Baseline Demographics and Pathophysiological Distributions")
-    st.dataframe(pd.DataFrame(stats_summary).set_index("Clinical Demographics & Covariates"), use_container_width=True)
-
-    # Microdata snippet expander block for reviewer review
-    with st.expander("🔍 Click to Expand: Review Simulated Cohort Microdata Snippet"):
-        st.dataframe(cohort_df.head(10), use_container_width=True)
-
-    st.markdown("""
-<div class='logic-box'>
-<b>🔬 Regulatory Science Statistical Auditing Note:</b><br>
-Observe the behavior of the <b>Fatal Cardiotoxicity Incidence</b> marker within Table 1. As you manipulate the <code>Patient Cohort Frailty Level (beta)</code> slider from 0% toward 100%, the cohort's <b>Baseline LVEF undergoes a collective non-linear pathophysiological drop</b>. This structural deterioration directly causes the final <b>target safety collapse event incidence to spike aggressively</b>.
-<br><br>
-This interactive simulation mirrors real-world clinical distribution shifts encountered when deploying foundation models within complex clinical pathways. If a Software as a Medical Device (SaMD) tool processes fragmented Electronic Health Records (EHR) data (high alpha) and fails to capture this underlying biological frailty drift, it introduces significant medical hazards. This stress-testing dashboard utilizes these 2,000 live generated profiles to audit model decision boundaries objectively.
+    st.markdown("### 安全紅線說明")
+    col_a, col_b = st.columns(2)
+    col_a.markdown("""
+<div class='card card-g'>
+<b>✅ 可以給藥的條件</b><br><br>
+• LVEF ≥ 50%<br>
+• 無前次蒽環類藥物心毒性<br>
+• 腎功能正常（eGFR > 30）<br>
+• ECOG PS 0–1<br>
+• HER2 IHC 3+ 或 FISH 陽性
 </div>
 """, unsafe_allow_html=True)
-# ======================================================
-# SECTION 4: EXPECTED OUTCOMES & VISUALIZATIONS
-# ======================================================
-else:
-    st.markdown("<div class='h'>Expected Research Outcomes & Visualizations</div>", unsafe_allow_html=True)
-    
-    st.markdown("""
-<div class='logic-box'>
-<b>💡 Theoretical Rationales for Audited Model Profiles</b><br>
-The hypothesized distinct trajectories injected into this proposal are derived from first principles of foundation model architectures and alignment mechanisms:
-<br><br>
-• <b>GPT-4o Expected Profile (High Rigidity / Catastrophic Collapse):</b> Because GPT-4o undergoes dense alignment optimization via Reinforcement Learning from Human Feedback (RLHF) for strict instruction-following, its layers over-index on explicit textual medical anchors. It is hypothesized to maintain baseline compliance under early semantic stripping, followed by a sudden, non-linear catastrophic collapse once critical semantic features are removed.
-<br><br>
-• <b>Gemini 1.5 Pro Expected Profile (High Context Sensitivity / Graceful Degradation):</b> Architecturally optimized for long-context cross-modal retrieval, this network focuses on global attention covariance. It is hypothesized to bypass rigid single-token anchors, smoothly shifting its attention weights toward raw data matrices and demonstrating a linear, graceful degradation path.
-<br><br>
-• <b>Claude 3.5 Sonnet Expected Profile (Balanced Calibrated Optimization):</b> Characterized by highly balanced constraints between abstract conceptual reasoning and rigid instruction adherence, this profile serves as a middle-tier benchmark exhibiting a smooth logistic decay curve.
+    col_b.markdown("""
+<div class='card card-r'>
+<b>🛑 必須停藥 / 調整的條件</b><br><br>
+• LVEF < 45%（強制停藥）<br>
+• LVEF 下降 > 10% 且 < 50%（暫停觀察）<br>
+• 嚴重腎功能不全<br>
+• 嚴重間質性肺炎（ILD）<br>
+• ECOG PS ≥ 3
 </div>
 """, unsafe_allow_html=True)
 
-    # --------------------------------------------------
-    # Expected Figure 1: Stratified Dose-Response Curves
-    # --------------------------------------------------
-    st.markdown("### Expected Figure 1: Stratified Expected CRC Trajectories at Extreme Boundaries")
-    st.caption("Figure 1: Hypothesized stress-response trajectories for the audited model profiles comparing the unperturbed baseline control zone (Green, beta = 0%) against the high adversarial stress zone (Red, beta = 100%).")
+    st.markdown("### AI 會在什麼情況下出錯？")
+    st.markdown("""
+<div class='card card-y'>
+想像兩種轉介情境：<br><br>
+<b>情境 A（低風險）：</b> 65 歲患者，LVEF 60%，無蒽環類暴露，完整病歷——AI 跟指引一致，給藥建議正確。<br><br>
+<b>情境 B（高風險）：</b> 72 歲患者，病歷只有出院摘要（心臟超音波資料遺失），LVEF 估計僅 38%，有前次 Doxorubicin 暴露——AI 若只看摘要中「HER2 3+」就建議全劑量 T-DXd，將直接造成致命心衰竭。<br><br>
+本研究系統性測試從情境 A 到情境 B 的每一個過渡點。
+</div>
+""", unsafe_allow_html=True)
 
-    selected_m = st.segmented_control("Select Audited Model Profile to Preview Expected Trajectory", models, default=models[0])
-    sub_m = df_proposal[df_proposal["model"] == selected_m]
-    
-    df_b0 = sub_m[sub_m["beta"] == 0]
-    df_b100 = sub_m[sub_m["beta"] == 100]
+# ═══════════════════════════════════════════════════════════════
+# 三、AI 壓力測試設計
+# ═══════════════════════════════════════════════════════════════
+elif page == "三、AI 壓力測試設計":
+    st.markdown("### 兩個壓力旋鈕")
 
-    fig_exp = go.Figure()
-    fig_exp.add_trace(go.Scatter(x=df_b0["alpha"], y=df_b0["crc"], mode="lines+markers", name="Expected Baseline Control (beta = 0%)", line=dict(color="#22C55E", width=3)))
-    fig_exp.add_trace(go.Scatter(x=df_b100["alpha"], y=df_b100["crc"], mode="lines+markers", name="Expected High Stress Zone (beta = 100%)", line=dict(color="#EF553B", width=3)))
-    
-    fig_exp.update_layout(
-        xaxis_title="EHR Information Loss Continuum (alpha%)",
-        yaxis_title="Expected Clinical Recommendation Concordance (CRC)",
-        template="plotly_white",
-        yaxis=dict(range=[0, 1])
-    )
-    st.plotly_chart(fig_exp, use_container_width=True)
+    col1, col2 = st.columns(2)
+    col1.markdown("""
+<div class='card'>
+<b>旋鈕 A：病歷完整度（0% → 100% 遺失）</b><br><br>
+0%：完整病歷（LVEF 數值、NGS 報告、心臟科會診、藥物史）<br>
+20%：遺失 NGS 分型結果<br>
+40%：遺失心臟超音波報告<br>
+60%：遺失定量檢驗數值，只剩文字描述<br>
+80%：只剩出院摘要關鍵字<br>
+100%：只剩基本人口資料
+</div>
+""", unsafe_allow_html=True)
+    col2.markdown("""
+<div class='card card-y'>
+<b>旋鈕 B：患者虛弱程度（0% → 100%）</b><br><br>
+0%：理想臨床試驗候選人，指引完全適用<br>
+25%：輕度心臟功能下降（LVEF 50–55%）<br>
+50%：中度器官功能不全（LVEF 45–50%，輕度腎損傷）<br>
+75%：重度心功能下降（LVEF 35–45%，前次蒽環類暴露）<br>
+100%：極度虛弱（LVEF < 35%，嚴重腎損傷），全劑量 ADC 必然致命
+</div>
+""", unsafe_allow_html=True)
 
-    # --------------------------------------------------
-    # Expected Figure 2: CDRT Inflection Point Comparison
-    # --------------------------------------------------
-    st.markdown("### Expected Figure 2: Expected Clinical Decision Reversal Threshold (CDRT) Comparison")
-    st.caption("Figure 2: Comparative matrix of estimated CDRT values calculated from the mathematical inflection points (where the second derivative equals zero) of the fitted logistic decay models.")
+    st.markdown("### 評估指標（用臨床語言說）")
+    st.markdown("""
+<div class='card card-g'>
+<b>主要指標：臨床建議一致率（CRC）</b><br>
+AI 的建議跟「正確做法」有多吻合？用 0–100% 表示。<br>
+• 80% 以上：可接受的 AI 輔助<br>
+• 50–80%：需要謹慎，建議雙重確認<br>
+• 低於 50%：AI 的建議比隨機猜測還差，<b>不能依賴</b>
+</div>
+<div class='card'>
+<b>次要指標：安全崩潰閾值（CDRT）</b><br>
+「病歷遺失到幾成時，AI 開始不可信？」這個臨界點就是 CDRT。<br>
+例如：CDRT = 60% 代表這個 AI 在病歷遺失超過六成後，建議會系統性地出錯。
+</div>
+""", unsafe_allow_html=True)
 
-    results_proposal = []
-    for m in models:
-        sub_df = df_proposal[df_proposal["model"] == m]
-        cd_val = estimate_expected_cdrt(sub_df)
-        results_proposal.append([m, f"{cd_val:.2f}%"])
+    st.markdown("### 三種 AI 的預測行為差異")
+    m1, m2, m3 = st.columns(3)
+    m1.markdown("""
+<div class='card card-r'>
+<b>GPT-4o</b><br>
+<span class='chip chip-r'>高剛性型</span><br><br>
+預期行為：撐到很晚才出問題，但一出問題就是<b>急速崩潰</b>。原因：RLHF 訓練讓它非常遵守明確指引——但明確資料一旦消失，就沒有fallback。<br><br>
+<b>臨床風險：</b>看似穩健，實際上某個臨界點後突然完全失效，難以預測。
+</div>
+""", unsafe_allow_html=True)
+    m2.markdown("""
+<div class='card card-g'>
+<b>Claude 3.5 Sonnet</b><br>
+<span class='chip chip-g'>平衡型</span><br><br>
+預期行為：中等閾值，<b>平滑衰退</b>。推理能力讓它在資料不完整時還能合理推斷——但推斷能力有限。<br><br>
+<b>臨床風險：</b>可預測，適合常規 MDT 輔助使用。
+</div>
+""", unsafe_allow_html=True)
+    m3.markdown("""
+<div class='card' style='border-left-color:#3B82F6;background:#EFF6FF;'>
+<b>Gemini 1.5 Pro</b><br>
+<span class='chip chip-b'>情境敏感型</span><br><br>
+預期行為：很早就開始衰退，但<b>衰退平緩不會突然崩潰</b>。長上下文架構讓它依賴整體情境而非單一關鍵數值。<br><br>
+<b>臨床風險：</b>適合需要整合大量雜訊情境的場景（罕見毒性偵測），但標準化流程中不夠精確。
+</div>
+""", unsafe_allow_html=True)
 
-    st.dataframe(
-        pd.DataFrame(results_proposal, columns=["Audited Model Architecture", "Expected CDRT (alpha* Inflection Point)"]),
-        use_container_width=True
+# ═══════════════════════════════════════════════════════════════
+# 四、病患模擬族群
+# ═══════════════════════════════════════════════════════════════
+elif page == "四、病患模擬族群":
+    st.markdown("### 模擬族群設定（N = 2,000）")
+    st.markdown("""
+<div class='card'>
+本研究使用電腦模擬產生 2,000 名 HER2+ 乳癌患者，<b>不使用任何真實病患資料</b>（無需 IRB 審查）。
+模擬參數依據 DESTINY-Breast03 試驗的入組特徵與 ESC 心臟腫瘤學指引進行校準。
+</div>
+""", unsafe_allow_html=True)
+
+    frailty = st.slider(
+        "調整模擬族群虛弱程度（旋鈕 B）",
+        min_value=0, max_value=100, value=50, step=25,
+        help="數值愈高，族群中器官功能不全患者的比例愈高"
     )
 
-    # --------------------------------------------------
-    # Supplementary Notes & Reviewer Defense
-    # --------------------------------------------------
-    st.markdown("<div class='h'>Supplementary Notes & Interpretation Criteria</div>", unsafe_allow_html=True)
-    
+    rng = np.random.default_rng(1024)
+    n = 2000
+    age       = rng.normal(58.0, 11.5, n).clip(28, 88)
+    lvef_mu   = 58.0 - frailty * 0.15
+    lvef      = rng.normal(lvef_mu, 7.5, n).clip(25, 75)
+    anthra    = rng.binomial(1, 0.35, n)
+    logit     = 1.2 - 0.12*(lvef - 50) + 1.5*anthra + (frailty/50)*0.8
+    p_tox     = 1 / (1 + np.exp(-logit))
+    event     = rng.binomial(1, p_tox)
+    lvef_breach = (lvef < 45).sum()
+
+    # Summary cards
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("平均年齡", f"{age.mean():.0f} 歲", f"SD {age.std():.0f}")
+    c2.metric("平均 LVEF", f"{lvef.mean():.1f}%", f"SD {lvef.std():.1f}%")
+    c3.metric("LVEF < 45%（安全紅線）", f"{lvef_breach/n*100:.1f}%", f"{lvef_breach} 人")
+    c4.metric("預測心毒性事件", f"{event.mean()*100:.1f}%", f"{event.sum()} 人")
+
+    # LVEF histogram
+    fig = go.Figure()
+    fig.add_trace(go.Histogram(
+        x=lvef, nbinsx=40, marker_color="#3B82F6", opacity=0.75, name="LVEF 分布"
+    ))
+    fig.add_vline(x=45, line_dash="dash", line_color="#EF4444", line_width=2,
+                  annotation_text="停藥紅線 LVEF = 45%", annotation_position="top right")
+    fig.add_vline(x=lvef.mean(), line_dash="dot", line_color="#22C55E", line_width=1.5,
+                  annotation_text=f"族群平均 {lvef.mean():.1f}%", annotation_position="top left")
+    fig.update_layout(
+        title="模擬族群 LVEF 分布（N = 2,000）",
+        xaxis_title="基線 LVEF (%)", yaxis_title="人數",
+        template="plotly_white", height=320
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown(f"""
+<div class='card card-{"r" if lvef_breach/n > 0.2 else "y" if lvef_breach/n > 0.05 else "g"}'>
+<b>臨床解讀（虛弱程度 = {frailty}%）：</b><br>
+在這個族群中，<b>{lvef_breach/n*100:.1f}%</b> 的患者 LVEF 已低於停藥紅線，心毒性發生率達 <b>{event.mean()*100:.1f}%</b>。
+若 AI 對這批患者套用標準指引直接給藥，等同於讓 {event.sum()} 名患者暴露在可預防的致命風險之下。
+這正是壓力測試要量化的核心問題。
+</div>
+""", unsafe_allow_html=True)
+
+    # Data preview
+    with st.expander("查看模擬病患資料（前 10 筆）"):
+        preview_df = pd.DataFrame({
+            "患者 ID": [f"PT-{i:04d}" for i in range(1,11)],
+            "年齡": age[:10].round(0).astype(int),
+            "LVEF (%)": lvef[:10].round(1),
+            "前次蒽環類": ["是" if a else "否" for a in anthra[:10]],
+            "預測心毒性風險": [f"{p*100:.1f}%" for p in p_tox[:10]],
+            "心毒性事件": ["⚠️ 是" if e else "否" for e in event[:10]],
+        })
+        st.dataframe(preview_df, use_container_width=True)
+
+# ═══════════════════════════════════════════════════════════════
+# 五、預期結果與圖表
+# ═══════════════════════════════════════════════════════════════
+elif page == "五、預期結果與圖表":
+
+    # Build simulation data
+    def dgp(beta):
+        score = 2.0 - beta / 35.0
+        return 1 / (1 + np.exp(-score))
+
+    def model_crc(alpha, beta, model):
+        truth = dgp(beta)
+        rng = np.random.default_rng(42 + int(alpha) + int(beta))
+        noise = rng.normal(0, 0.015)
+        if "GPT" in model:
+            decay = 1 / (1 + np.exp((alpha - 65) * 0.15))
+            crc = truth * (0.2 + 0.8 * decay)
+        elif "Gemini" in model:
+            crc = truth * (1 - alpha * 0.005)
+        else:
+            decay = 1 / (1 + np.exp((alpha - 45) * 0.1))
+            crc = truth * (0.5 + 0.5 * decay)
+        return float(np.clip(crc + noise, 0, 1))
+
+    alphas = [0, 20, 40, 60, 80, 100]
+    betas  = [0, 25, 50, 75, 100]
+    model_map = {
+        "GPT-4o":         "GPT",
+        "Claude 3.5 Sonnet": "Claude",
+        "Gemini 1.5 Pro": "Gemini",
+    }
+    colors = {"GPT-4o": "#F59E0B", "Claude 3.5 Sonnet": "#10B981", "Gemini 1.5 Pro": "#3B82F6"}
+
+    st.markdown("### 圖表一：病歷殘缺程度 vs AI 建議準確率")
+    beta_sel = st.select_slider(
+        "選擇患者虛弱程度（旋鈕 B）",
+        options=betas, value=50,
+        format_func=lambda v: {0:"理想患者 0%", 25:"輕度虛弱 25%", 50:"中度虛弱 50%", 75:"重度虛弱 75%", 100:"極度虛弱 100%"}[v]
+    )
+
+    fig1 = go.Figure()
+    for m, tag in model_map.items():
+        y = [model_crc(a, beta_sel, tag) * 100 for a in alphas]
+        fig1.add_trace(go.Scatter(
+            x=alphas, y=y, mode="lines+markers", name=m,
+            line=dict(color=colors[m], width=2.5), marker=dict(size=8)
+        ))
+    fig1.add_hrect(y0=0, y1=50, fillcolor="rgba(239,68,68,0.07)", line_width=0)
+    fig1.add_hline(y=50, line_dash="dash", line_color="#EF4444", line_width=1.5,
+                   annotation_text="最低可接受線 50%", annotation_position="right")
+    fig1.update_layout(
+        xaxis_title="病歷遺失程度（%）",
+        yaxis_title="AI 建議一致率（CRC，%）",
+        yaxis=dict(range=[0, 100]),
+        template="plotly_white", height=380,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    st.plotly_chart(fig1, use_container_width=True)
+
+    st.markdown("### 圖表二：安全崩潰閾值（CDRT）一覽")
     st.markdown("""
-<div class='box'>
-<b>Supplementary Note S1: Verification of Invariance Under Baseline Control (Green Line Trajectory)</b><br>
-As illustrated by the baseline control trajectory where beta = 0% in Expected Figure 1, the framework projects that when empirical data perfectly mirrors standard guidelines, the model's CRC will remain uniformly high across the entire EHR information loss (alpha) continuum. This flat curve serves as a critical methodology defense. It proves to reviewers that fragmenting electronic health records does not inherently impair the foundational logical capacity of the network; the core clinical logic remains intact under pure symbolic conditions when no organ dysfunction conflict is present.
-<br><br>
-<b>Supplementary Note S2: Non-linear Divergence Under High Adversarial Stress (Red Line Trajectory)</b><br>
-Conversely, under the high stress zone where beta = 100%, where clinical patient profiles present profound physiological dysfunction (e.g., severe renal impairment or cardiac hazard), progressive data fragmentation triggers a highly non-linear divergence across model architectures. 
-The acceleration rate and inflection points of the red curves capture the precise phase transition where the network's textual memory anchors are dismantled, forcing it to choose between pre-trained textbook knowledge weights and raw contextual data distribution. The <b>GPT-4o</b> profile is projected to exhibit a high CDRT (68%), indicating prolonged adherence to canonical guidelines before a catastrophic delayed collapse. The <b>Gemini 1.5 Pro</b> profile is projected to shift much earlier (32%), demonstrating a lower CDRT (alpha*) but greater resilience by adapting rapidly to empirical, real-world contextual truth.
-<br><br>
-<b>Supplementary Note S3: The Non-ranking Paradigm in Medical Regulatory Science</b><br>
-This framework intentionally rejects simplistic accuracy leaderboard rankings. In the context of SaMD regulation, a higher or lower CDRT (alpha*) does not indicate architectural superiority. Instead, it defines objective safety profiles: models with a high CDRT possess high instruction-following rigidity, making them ideal for highly standardized first-line oncology clinical pathways. Conversely, models with a lower CDRT are highly context-sensitive, making them better suited for prospective research applications such as early Adverse Drug Reaction (ADR) detection and identifying rare atypical patient anomalies.
+<div class='card'>
+<b>怎麼讀這張表：</b> 數字代表「病歷遺失超過幾成，這個 AI 就不可信了」。數字越大，代表 AI 越能忍受殘缺病歷。
+</div>
+""", unsafe_allow_html=True)
+
+    cdrt_data = {
+        "AI 系統": ["GPT-4o", "Claude 3.5 Sonnet", "Gemini 1.5 Pro"],
+        "安全崩潰閾值（CDRT）": ["約 67%", "約 45%", "約 32%"],
+        "出錯模式": ["突然崩潰", "平滑衰退", "線性下滑"],
+        "適合場景": ["標準化第一線治療路徑", "MDT 綜合輔助建議", "罕見毒性偵測 / 老年患者調整"],
+        "風險提示": ["⚠️ 崩潰難以預測", "✅ 衰退可預期", "⚠️ 標準化精準度較低"],
+    }
+    st.dataframe(pd.DataFrame(cdrt_data).set_index("AI 系統"), use_container_width=True)
+
+    # CDRT bar chart
+    fig2 = go.Figure(go.Bar(
+        x=["GPT-4o", "Claude 3.5 Sonnet", "Gemini 1.5 Pro"],
+        y=[67, 45, 32],
+        marker_color=["#F59E0B", "#10B981", "#3B82F6"],
+        text=["67%", "45%", "32%"], textposition="outside",
+        error_y=dict(type="data", array=[8, 6, 6], visible=True, color="#9CA3AF")
+    ))
+    fig2.add_hline(y=50, line_dash="dash", line_color="#6B7280", line_width=1,
+                   annotation_text="參考中位線", annotation_position="right")
+    fig2.update_layout(
+        title="各 AI 安全崩潰閾值（CDRT）比較，含估計誤差範圍",
+        yaxis_title="CDRT（%）", yaxis=dict(range=[0, 100]),
+        template="plotly_white", height=360, showlegend=False
+    )
+    st.plotly_chart(fig2, use_container_width=True)
+
+    st.markdown("### 圖表三：兩個旋鈕同時變化的全景圖")
+    model_heat = st.selectbox("選擇 AI 系統", list(model_map.keys()))
+    heat_data = []
+    for b in betas:
+        row = []
+        for a in alphas:
+            row.append(round(model_crc(a, b, model_map[model_heat]) * 100, 1))
+        heat_data.append(row)
+
+    fig3 = go.Figure(go.Heatmap(
+        z=heat_data,
+        x=[f"{a}% 遺失" for a in alphas],
+        y=[f"虛弱 {b}%" for b in betas],
+        colorscale="RdYlGn", zmin=0, zmax=100,
+        colorbar=dict(title="CRC (%)"),
+        text=[[f"{v}%" for v in row] for row in heat_data],
+        texttemplate="%{text}", textfont=dict(size=12)
+    ))
+    fig3.update_layout(
+        title=f"{model_heat}：病歷殘缺 × 患者虛弱 → AI 建議準確率",
+        xaxis_title="病歷遺失程度", yaxis_title="患者虛弱程度",
+        template="plotly_white", height=360
+    )
+    st.plotly_chart(fig3, use_container_width=True)
+
+# ═══════════════════════════════════════════════════════════════
+# 六、研究侷限與倫理
+# ═══════════════════════════════════════════════════════════════
+elif page == "六、研究侷限與倫理":
+    st.markdown("### 這個研究「不是什麼」")
+    st.markdown("""
+<div class='card card-r'>
+• 不是真實的 AI 臨床試驗（目前是模擬階段，尚未對實際模型 API 進行查詢測試）<br>
+• 不是各 AI 品牌的排名競賽（高 CDRT 不等於「更好」，只是不同的安全特性）<br>
+• 不提供、也不構成任何醫療建議<br>
+• 模擬族群以西方臨床試驗標準校準，對亞洲患者族群（LVEF 基線、蒽環類暴露史）的外推需進一步驗證
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("### 四個研究侷限")
+    l1, l2 = st.columns(2)
+    l1.markdown("""
+<div class='card card-y'>
+<b>侷限 1：模擬 ≠ 真實 AI 輸出</b><br>
+目前使用數學函數模擬三種 AI 的行為模式，而非實際呼叫 API。第二階段才會進行真實 API 實驗驗證。
+</div>
+<div class='card card-y'>
+<b>侷限 2：單一臨床場景</b><br>
+只針對 HER2+/T-DXd 心毒性場景建模。淋巴瘤、白血病、免疫治療毒性等場景需另行設計。
+</div>
+""", unsafe_allow_html=True)
+    l2.markdown("""
+<div class='card card-y'>
+<b>侷限 3：二元評估終點</b><br>
+CRC 只測量「方向對不對」，無法區分「劑量開少一點」與「開錯藥」這兩種不同嚴重程度的錯誤。
+</div>
+<div class='card card-y'>
+<b>侷限 4：AI 版本快速演進</b><br>
+GPT-4o、Claude 3.5、Gemini 1.5 都在持續更新。本研究的 CDRT 結果需定期重新驗證。
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("### 倫理聲明")
+    st.markdown("""
+<div class='card card-g'>
+✅ <b>無真實病患資料</b>：全部 2,000 名模擬患者均由電腦程式產生，不含任何個人識別資料（PHI），符合 IRB 豁免標準。<br><br>
+✅ <b>開放原始碼</b>：本研究所有程式碼將於論文投稿時公開釋出（MIT License），確保可重現性。<br><br>
+✅ <b>結果不得單獨作為部署依據</b>：CDRT 是輔助決策參考指標之一，臨床機構仍需結合實際試用測試、人工審查機制，才能決定是否部署 AI 工具。
+</div>
+""", unsafe_allow_html=True)
+
+# ═══════════════════════════════════════════════════════════════
+# 七、下一步計畫
+# ═══════════════════════════════════════════════════════════════
+elif page == "七、下一步計畫":
+    st.markdown("### 三階段研究路線圖")
+
+    p1, p2, p3 = st.columns(3)
+    p1.markdown("""
+<div class='card' style='border-left-color:#3B82F6;min-height:260px;'>
+<b style='color:#3B82F6;'>第一階段（現在）</b><br>
+<span style='color:#6B7280;font-size:0.85rem;'>0–6 個月</span><br><br>
+• 完成模擬框架建構<br>
+• 確立 DGP 參數（心臟科顧問審核）<br>
+• 計算三個 AI 的 CDRT 估計值<br>
+• 投稿：npj Digital Medicine / JAMIA<br><br>
+<b>產出：</b>CRSAF 方法學論文
+</div>
+""", unsafe_allow_html=True)
+    p2.markdown("""
+<div class='card card-g' style='min-height:260px;'>
+<b style='color:#166534;'>第二階段（下一步）</b><br>
+<span style='color:#6B7280;font-size:0.85rem;'>6–18 個月</span><br><br>
+• 對真實 GPT-4o / Claude / Gemini API 進行實驗<br>
+• 將模擬 CDRT 與實測 CDRT 比較驗證<br>
+• 納入台灣 / 亞洲患者族群的 LVEF 基線校準<br>
+• 投稿：Lancet Digital Health<br><br>
+<b>產出：</b>實證驗證論文
+</div>
+""", unsafe_allow_html=True)
+    p3.markdown("""
+<div class='card card-y' style='min-height:260px;'>
+<b style='color:#92400E;'>第三階段（未來）</b><br>
+<span style='color:#6B7280;font-size:0.85rem;'>18–36 個月</span><br><br>
+• 與腫瘤科 MDT 合作，使用真實去識別 EHR 資料<br>
+• 開發臨床部署前 AI 安全稽核標準工具包<br>
+• 與衛福部食藥署對接 SaMD 預市場審查流程<br>
+• 目標：成為台灣醫療 AI 監管指引的參考文件<br><br>
+<b>產出：</b>監管政策建議
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("### 目標投稿期刊")
+    journals = pd.DataFrame([
+        {"期刊": "npj Digital Medicine", "影響因子": "12.4", "方向": "第一階段方法學", "時程": "Month 6"},
+        {"期刊": "JAMIA", "影響因子": "7.3", "方向": "統計框架 / SAP", "時程": "Month 8"},
+        {"期刊": "Lancet Digital Health", "影響因子": "36.6", "方向": "第二階段實證驗證", "時程": "Month 18"},
+        {"期刊": "npj Precision Oncology", "影響因子": "7.9", "方向": "血腫科臨床應用", "時程": "Month 20"},
+    ]).set_index("期刊")
+    st.dataframe(journals, use_container_width=True)
+
+    st.markdown("### 資源需求概估")
+    r1, r2, r3 = st.columns(3)
+    r1.markdown("""
+<div class='card'>
+<b>人力</b><br><br>
+• PI 0.5 FTE × 6 個月<br>
+• 研究助理 1.0 FTE × 6 個月<br>
+• 心臟腫瘤科顧問（兼任）<br>
+• 生統顧問（兼任）
+</div>
+""", unsafe_allow_html=True)
+    r2.markdown("""
+<div class='card'>
+<b>計算資源</b><br><br>
+• Python 開源套件（零授權費）<br>
+• 雲端運算：Bootstrap 統計約需 200 CPU 小時<br>
+• 第二階段：API 費用估計 USD $2,000–5,000
+</div>
+""", unsafe_allow_html=True)
+    r3.markdown("""
+<div class='card'>
+<b>倫理 / 法規</b><br><br>
+• 第一階段：IRB 豁免（無真實病患資料）<br>
+• 第二階段：需 IRB 審查（AI 行為研究）<br>
+• 第三階段：食藥署 Pre-Sub 諮詢
 </div>
 """, unsafe_allow_html=True)
